@@ -400,7 +400,9 @@
   "pk": 1,
   "fields": {
     "create_time": "2022-12-11T23:00:34.363",
-    "update_time": "2022-12-21T03:14:52.937",
+    "update_time": "2023-01-07T01:06:21.176",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "系统管理",
     "parent": null,
     "is_menu": true,
@@ -409,7 +411,7 @@
     "icon": "setting-outlined",
     "component": "@/layout/BasicLayout.vue",
     "path": "/system",
-    "redirect": "/server/monitor",
+    "redirect": "/users/list",
     "is_visible": true
   }
 },
@@ -419,6 +421,8 @@
   "fields": {
     "create_time": "2022-12-11T23:03:50.880",
     "update_time": "2022-12-21T03:15:27.238",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "权限管理",
     "parent": 1,
     "is_menu": true,
@@ -437,6 +441,8 @@
   "fields": {
     "create_time": "2022-12-11T23:49:30.338",
     "update_time": "2022-12-21T03:15:19.285",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "角色管理",
     "parent": 1,
     "is_menu": true,
@@ -455,6 +461,8 @@
   "fields": {
     "create_time": "2022-12-11T23:50:20.159",
     "update_time": "2022-12-21T03:15:14.154",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "用户管理",
     "parent": 1,
     "is_menu": true,
@@ -473,6 +481,8 @@
   "fields": {
     "create_time": "2022-12-11T23:51:55.072",
     "update_time": "2022-12-21T03:13:13.610",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "部门管理",
     "parent": 1,
     "is_menu": true,
@@ -491,6 +501,8 @@
   "fields": {
     "create_time": "2022-12-11T23:56:13.453",
     "update_time": "2022-12-21T03:15:03.897",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "服务器性能监控",
     "parent": 1,
     "is_menu": true,
@@ -509,6 +521,8 @@
   "fields": {
     "create_time": "2022-12-12T00:01:29.545",
     "update_time": "2022-12-12T00:01:29.545",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "新增权限",
     "parent": 2,
     "is_menu": false,
@@ -527,6 +541,8 @@
   "fields": {
     "create_time": "2022-12-12T00:02:04.900",
     "update_time": "2022-12-12T00:02:04.900",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "查询权限列表",
     "parent": 2,
     "is_menu": false,
@@ -545,6 +561,8 @@
   "fields": {
     "create_time": "2022-12-12T00:03:06.677",
     "update_time": "2022-12-12T00:03:06.677",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "查询权限详情",
     "parent": 2,
     "is_menu": false,
@@ -563,6 +581,8 @@
   "fields": {
     "create_time": "2022-12-12T00:04:25.641",
     "update_time": "2022-12-12T00:04:25.641",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "修改权限",
     "parent": 2,
     "is_menu": false,
@@ -581,6 +601,8 @@
   "fields": {
     "create_time": "2022-12-12T00:06:07.833",
     "update_time": "2022-12-12T00:06:07.833",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "修改权限部分信息",
     "parent": 2,
     "is_menu": false,
@@ -599,6 +621,8 @@
   "fields": {
     "create_time": "2022-12-12T00:06:53.322",
     "update_time": "2022-12-12T00:06:53.322",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "删除权限",
     "parent": 2,
     "is_menu": false,
@@ -617,6 +641,8 @@
   "fields": {
     "create_time": "2022-12-12T00:11:08.205",
     "update_time": "2022-12-12T00:11:08.205",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "查询权限树列表",
     "parent": 2,
     "is_menu": false,
@@ -635,6 +661,8 @@
   "fields": {
     "create_time": "2022-12-12T00:13:01.529",
     "update_time": "2022-12-12T00:13:01.529",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "查询部门列表",
     "parent": 5,
     "is_menu": false,
@@ -653,6 +681,8 @@
   "fields": {
     "create_time": "2022-12-12T00:13:29.320",
     "update_time": "2022-12-12T00:13:29.320",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "新增部门",
     "parent": 5,
     "is_menu": false,
@@ -671,6 +701,8 @@
   "fields": {
     "create_time": "2022-12-12T00:14:07.916",
     "update_time": "2022-12-12T00:14:07.916",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "查询部门详情",
     "parent": 5,
     "is_menu": false,
@@ -689,6 +721,8 @@
   "fields": {
     "create_time": "2022-12-12T00:14:41.915",
     "update_time": "2022-12-12T00:14:41.915",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "修改部门",
     "parent": 5,
     "is_menu": false,
@@ -707,6 +741,8 @@
   "fields": {
     "create_time": "2022-12-12T00:15:10.604",
     "update_time": "2022-12-12T00:15:10.604",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "修改部门部分信息",
     "parent": 5,
     "is_menu": false,
@@ -725,6 +761,8 @@
   "fields": {
     "create_time": "2022-12-12T00:15:59.142",
     "update_time": "2022-12-12T00:15:59.142",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "删除部门",
     "parent": 5,
     "is_menu": false,
@@ -743,6 +781,8 @@
   "fields": {
     "create_time": "2022-12-12T00:16:33.443",
     "update_time": "2022-12-12T00:16:33.443",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "查询部门树列表",
     "parent": 5,
     "is_menu": false,
@@ -761,6 +801,8 @@
   "fields": {
     "create_time": "2022-12-12T00:22:09.297",
     "update_time": "2022-12-12T00:22:09.297",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "查询用户列表",
     "parent": 4,
     "is_menu": false,
@@ -779,6 +821,8 @@
   "fields": {
     "create_time": "2022-12-12T00:22:25.464",
     "update_time": "2022-12-12T00:22:25.464",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "新增用户",
     "parent": 4,
     "is_menu": false,
@@ -797,6 +841,8 @@
   "fields": {
     "create_time": "2022-12-12T00:22:59.941",
     "update_time": "2022-12-12T00:22:59.941",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "查询用户详情",
     "parent": 4,
     "is_menu": false,
@@ -815,6 +861,8 @@
   "fields": {
     "create_time": "2022-12-12T00:23:28.885",
     "update_time": "2022-12-12T00:23:28.885",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "修改用户",
     "parent": 4,
     "is_menu": false,
@@ -833,6 +881,8 @@
   "fields": {
     "create_time": "2022-12-12T00:24:08.036",
     "update_time": "2022-12-12T00:24:08.036",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "修改用户部分信息",
     "parent": 4,
     "is_menu": false,
@@ -851,6 +901,8 @@
   "fields": {
     "create_time": "2022-12-12T00:24:36.453",
     "update_time": "2022-12-12T00:24:36.453",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "删除用户",
     "parent": 4,
     "is_menu": false,
@@ -869,6 +921,8 @@
   "fields": {
     "create_time": "2022-12-12T00:25:28.888",
     "update_time": "2022-12-12T00:25:28.888",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "新增角色",
     "parent": 3,
     "is_menu": false,
@@ -887,6 +941,8 @@
   "fields": {
     "create_time": "2022-12-12T00:25:46.633",
     "update_time": "2022-12-12T00:25:46.633",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "查询角色列表",
     "parent": 3,
     "is_menu": false,
@@ -905,6 +961,8 @@
   "fields": {
     "create_time": "2022-12-12T00:26:25.507",
     "update_time": "2022-12-12T00:26:25.507",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "查询角色详情",
     "parent": 3,
     "is_menu": false,
@@ -923,6 +981,8 @@
   "fields": {
     "create_time": "2022-12-12T00:26:48.424",
     "update_time": "2022-12-12T00:26:48.424",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "修改角色",
     "parent": 3,
     "is_menu": false,
@@ -941,6 +1001,8 @@
   "fields": {
     "create_time": "2022-12-12T00:27:05.600",
     "update_time": "2022-12-12T00:27:05.600",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "修改角色部分信息",
     "parent": 3,
     "is_menu": false,
@@ -959,6 +1021,8 @@
   "fields": {
     "create_time": "2022-12-12T00:27:36.110",
     "update_time": "2022-12-12T00:27:36.110",
+    "creator": "admin",
+    "modifier": "admin",
     "title": "删除角色",
     "parent": 3,
     "is_menu": false,
@@ -977,6 +1041,8 @@
   "fields": {
     "create_time": "2022-12-11T23:45:23.748",
     "update_time": "2022-12-12T00:44:45.950",
+    "creator": "admin",
+    "modifier": "admin",
     "name": "admin",
     "desc": "超级管理员角色",
     "permissions": [
@@ -1021,6 +1087,8 @@
   "fields": {
     "create_time": "2022-12-11T23:46:07.126",
     "update_time": "2022-12-20T22:51:05.999",
+    "creator": "admin",
+    "modifier": "admin",
     "name": "user",
     "desc": "普通用户角色",
     "permissions": [
@@ -1043,6 +1111,8 @@
   "fields": {
     "create_time": "2022-12-12T00:54:35.938",
     "update_time": "2022-12-12T00:54:35.938",
+    "creator": "admin",
+    "modifier": "admin",
     "name": "北京太极无限科技有限公司",
     "type": "company",
     "parent": null
@@ -1054,6 +1124,8 @@
   "fields": {
     "create_time": "2022-12-12T00:54:53.995",
     "update_time": "2022-12-12T00:54:53.995",
+    "creator": "admin",
+    "modifier": "admin",
     "name": "研发部",
     "type": "department",
     "parent": 1
@@ -1065,6 +1137,8 @@
   "fields": {
     "create_time": "2022-12-12T00:55:27.444",
     "update_time": "2022-12-12T00:55:27.444",
+    "creator": "admin",
+    "modifier": "admin",
     "name": "前端组",
     "type": "department",
     "parent": 2
@@ -1076,6 +1150,8 @@
   "fields": {
     "create_time": "2022-12-12T00:55:38.856",
     "update_time": "2022-12-12T00:55:38.856",
+    "creator": "admin",
+    "modifier": "admin",
     "name": "后端组",
     "type": "department",
     "parent": 2
@@ -1087,6 +1163,8 @@
   "fields": {
     "create_time": "2022-12-12T00:55:45.577",
     "update_time": "2022-12-12T00:55:45.577",
+    "creator": "admin",
+    "modifier": "admin",
     "name": "测试组",
     "type": "department",
     "parent": 2
@@ -1097,7 +1175,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$260000$VRSiTDFUDYCpmNEA7dTT3E$NmNIQOunPxtgaHFqAM99obpUmQUVuFwhybmYdjrMSRg=",
-    "last_login": null,
+    "last_login": "2023-01-06T23:25:37.446",
     "is_superuser": true,
     "username": "admin",
     "first_name": "",

@@ -83,10 +83,9 @@ class UserViewSet(ModelViewSet):
     queryset = User.objects.all().order_by('-id')
 
     def get_serializer_class(self):
-        if self.action == 'update' or self.action == 'partial_update' or self.action == 'create' or \
-                self.action == 'update_profile':
+        if self.action in ['update', 'partial_update', 'create', 'update_profile']:
             return UserCreateUpdateSerializer
-        elif self.action == 'destroy' or self.action == 'list':
+        elif self.action in ['list', 'destroy']:
             return UserListDestroySerializer
         elif self.action == 'retrieve':
             return UserRetrieveSerializer

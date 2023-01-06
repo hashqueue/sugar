@@ -18,9 +18,9 @@ class PermissionViewSet(ModelViewSet):
     queryset = Permission.objects.all().order_by('-id')
 
     def get_serializer_class(self):
-        if self.action == 'update' or self.action == 'partial_update' or self.action == 'create':
+        if self.action in ['update', 'partial_update', 'create']:
             return PermissionCreateUpdateSerializer
-        elif self.action == 'retrieve' or self.action == 'destroy':
+        elif self.action in ['retrieve', 'destroy']:
             return PermissionRetrieveSerializer
         elif self.action == 'list':
             return PermissionBaseRetrieveSerializer
@@ -28,6 +28,12 @@ class PermissionViewSet(ModelViewSet):
             return GetPermissionsTreeWithRoleIdsSerializer
         elif self.action == 'get_permission_tree_list':
             return PermissionTreeSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user.username, modifier=self.request.user.username)
+
+    def perform_update(self, serializer):
+        serializer.save(modifier=self.request.user.username)
 
     @extend_schema(responses=unite_response_format_schema('create-permission', PermissionCreateUpdateSerializer))
     def create(self, request, *args, **kwargs):

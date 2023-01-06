@@ -28,14 +28,20 @@ class OrganizationViewSet(ModelViewSet):
     filterset_class = OrganizationNameFilter
 
     def get_serializer_class(self):
-        if self.action == 'update' or self.action == 'partial_update' or self.action == 'create':
+        if self.action in ['update', 'partial_update', 'create']:
             return OrganizationCreateUpdateSerializer
-        elif self.action == 'retrieve' or self.action == 'destroy':
+        elif self.action in ['retrieve', 'destroy']:
             return OrganizationRetrieveSerializer
         elif self.action == 'list':
             return OrganizationBaseRetrieveSerializer
         elif self.action == 'get_organization_tree_list':
             return OrganizationTreeListSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user.username, modifier=self.request.user.username)
+
+    def perform_update(self, serializer):
+        serializer.save(modifier=self.request.user.username)
 
     @extend_schema(responses=unite_response_format_schema('create-organization', OrganizationCreateUpdateSerializer))
     def create(self, request, *args, **kwargs):

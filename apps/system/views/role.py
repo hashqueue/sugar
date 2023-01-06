@@ -12,10 +12,16 @@ class RoleViewSet(ModelViewSet):
     queryset = Role.objects.all().order_by('-id')
 
     def get_serializer_class(self):
-        if self.action == 'update' or self.action == 'partial_update' or self.action == 'create':
+        if self.action in ['update', 'partial_update', 'create']:
             return RoleCreateUpdateSerializer
-        elif self.action == 'retrieve' or self.action == 'destroy' or self.action == 'list':
+        elif self.action in ['retrieve', 'destroy', 'list']:
             return RoleRetrieveSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user.username, modifier=self.request.user.username)
+
+    def perform_update(self, serializer):
+        serializer.save(modifier=self.request.user.username)
 
     @extend_schema(responses=unite_response_format_schema('create-role', RoleCreateUpdateSerializer))
     def create(self, request, *args, **kwargs):

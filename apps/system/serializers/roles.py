@@ -7,7 +7,7 @@ class RoleCreateUpdateSerializer(BaseModelSerializer):
     class Meta:
         model = Role
         fields = '__all__'
-        read_only_fields = ('id', 'create_time', 'update_time')
+        read_only_fields = ('id', 'create_time', 'update_time', 'creator', 'modifier')
 
 
 class RoleBaseRetrieveSerializer(BaseModelSerializer):

@@ -8,7 +8,7 @@ class PermissionCreateUpdateSerializer(BaseModelSerializer):
     class Meta:
         model = Permission
         fields = '__all__'
-        read_only_fields = ('id', 'create_time', 'update_time')
+        read_only_fields = ('id', 'create_time', 'update_time', 'creator', 'modifier')
 
     def update(self, instance, validated_data):
         parent = validated_data.get('parent', False)
