@@ -117,6 +117,12 @@ class UserListDestroySerializer(serializers.ModelSerializer):
         exclude = ('password', 'groups', 'user_permissions', 'first_name', 'last_name', 'last_login')
 
 
+class UserThinRetrieveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'avatar', 'name')
+
+
 class UserRetrieveSerializer(serializers.ModelSerializer):
     date_joined = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True, help_text='加入时间')
     department = OrganizationBaseRetrieveSerializer(many=False, read_only=True)

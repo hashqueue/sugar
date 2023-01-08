@@ -324,6 +324,222 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 37,
+  "fields": {
+    "name": "Can add 项目",
+    "content_type": 10,
+    "codename": "add_project"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 38,
+  "fields": {
+    "name": "Can change 项目",
+    "content_type": 10,
+    "codename": "change_project"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 39,
+  "fields": {
+    "name": "Can delete 项目",
+    "content_type": 10,
+    "codename": "delete_project"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 40,
+  "fields": {
+    "name": "Can view 项目",
+    "content_type": 10,
+    "codename": "view_project"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 41,
+  "fields": {
+    "name": "Can add 需求",
+    "content_type": 11,
+    "codename": "add_workitem"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 42,
+  "fields": {
+    "name": "Can change 需求",
+    "content_type": 11,
+    "codename": "change_workitem"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 43,
+  "fields": {
+    "name": "Can delete 需求",
+    "content_type": 11,
+    "codename": "delete_workitem"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 44,
+  "fields": {
+    "name": "Can view 需求",
+    "content_type": 11,
+    "codename": "view_workitem"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 45,
+  "fields": {
+    "name": "Can add 静态文件",
+    "content_type": 12,
+    "codename": "add_userfile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 46,
+  "fields": {
+    "name": "Can change 静态文件",
+    "content_type": 12,
+    "codename": "change_userfile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 47,
+  "fields": {
+    "name": "Can delete 静态文件",
+    "content_type": 12,
+    "codename": "delete_userfile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 48,
+  "fields": {
+    "name": "Can view 静态文件",
+    "content_type": 12,
+    "codename": "view_userfile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 49,
+  "fields": {
+    "name": "Can add 迭代",
+    "content_type": 13,
+    "codename": "add_sprint"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 50,
+  "fields": {
+    "name": "Can change 迭代",
+    "content_type": 13,
+    "codename": "change_sprint"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 51,
+  "fields": {
+    "name": "Can delete 迭代",
+    "content_type": 13,
+    "codename": "delete_sprint"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 52,
+  "fields": {
+    "name": "Can view 迭代",
+    "content_type": 13,
+    "codename": "view_sprint"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 53,
+  "fields": {
+    "name": "Can add 用户评论",
+    "content_type": 14,
+    "codename": "add_comment"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 54,
+  "fields": {
+    "name": "Can change 用户评论",
+    "content_type": 14,
+    "codename": "change_comment"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 55,
+  "fields": {
+    "name": "Can delete 用户评论",
+    "content_type": 14,
+    "codename": "delete_comment"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 56,
+  "fields": {
+    "name": "Can view 用户评论",
+    "content_type": 14,
+    "codename": "view_comment"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 57,
+  "fields": {
+    "name": "Can add 变更记录",
+    "content_type": 15,
+    "codename": "add_changelog"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 58,
+  "fields": {
+    "name": "Can change 变更记录",
+    "content_type": 15,
+    "codename": "change_changelog"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 59,
+  "fields": {
+    "name": "Can delete 变更记录",
+    "content_type": 15,
+    "codename": "delete_changelog"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 60,
+  "fields": {
+    "name": "Can view 变更记录",
+    "content_type": 15,
+    "codename": "view_changelog"
+  }
+},
+{
   "model": "contenttypes.contenttype",
   "pk": 1,
   "fields": {
@@ -396,11 +612,59 @@
   }
 },
 {
+  "model": "contenttypes.contenttype",
+  "pk": 10,
+  "fields": {
+    "app_label": "project",
+    "model": "project"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 11,
+  "fields": {
+    "app_label": "project",
+    "model": "workitem"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 12,
+  "fields": {
+    "app_label": "project",
+    "model": "userfile"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 13,
+  "fields": {
+    "app_label": "project",
+    "model": "sprint"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 14,
+  "fields": {
+    "app_label": "project",
+    "model": "comment"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 15,
+  "fields": {
+    "app_label": "project",
+    "model": "changelog"
+  }
+},
+{
   "model": "system.permission",
   "pk": 1,
   "fields": {
     "create_time": "2022-12-11T23:00:34.363",
-    "update_time": "2023-01-07T01:06:21.176",
+    "update_time": "2023-01-09T00:34:47.710",
     "creator": "admin",
     "modifier": "admin",
     "title": "系统管理",
@@ -411,7 +675,7 @@
     "icon": "setting-outlined",
     "component": "@/layout/BasicLayout.vue",
     "path": "/system",
-    "redirect": "/users/list",
+    "redirect": "users/list",
     "is_visible": true
   }
 },
@@ -420,7 +684,7 @@
   "pk": 2,
   "fields": {
     "create_time": "2022-12-11T23:03:50.880",
-    "update_time": "2022-12-21T03:15:27.238",
+    "update_time": "2023-01-08T23:54:45.298",
     "creator": "admin",
     "modifier": "admin",
     "title": "权限管理",
@@ -430,7 +694,7 @@
     "url_path": "",
     "icon": "safety-outlined",
     "component": "@/views/system/permission/PermissionList.vue",
-    "path": "/permissions/list",
+    "path": "permissions/list",
     "redirect": "",
     "is_visible": true
   }
@@ -440,7 +704,7 @@
   "pk": 3,
   "fields": {
     "create_time": "2022-12-11T23:49:30.338",
-    "update_time": "2022-12-21T03:15:19.285",
+    "update_time": "2023-01-08T23:54:40.397",
     "creator": "admin",
     "modifier": "admin",
     "title": "角色管理",
@@ -450,7 +714,7 @@
     "url_path": "",
     "icon": "team-outlined",
     "component": "@/views/system/role/RoleList.vue",
-    "path": "/roles/list",
+    "path": "roles/list",
     "redirect": "",
     "is_visible": true
   }
@@ -460,7 +724,7 @@
   "pk": 4,
   "fields": {
     "create_time": "2022-12-11T23:50:20.159",
-    "update_time": "2022-12-21T03:15:14.154",
+    "update_time": "2023-01-08T23:54:35.009",
     "creator": "admin",
     "modifier": "admin",
     "title": "用户管理",
@@ -470,7 +734,7 @@
     "url_path": "",
     "icon": "user-outlined",
     "component": "@/views/system/user/UserList.vue",
-    "path": "/users/list",
+    "path": "users/list",
     "redirect": "",
     "is_visible": true
   }
@@ -480,7 +744,7 @@
   "pk": 5,
   "fields": {
     "create_time": "2022-12-11T23:51:55.072",
-    "update_time": "2022-12-21T03:13:13.610",
+    "update_time": "2023-01-08T23:54:30.712",
     "creator": "admin",
     "modifier": "admin",
     "title": "部门管理",
@@ -490,7 +754,7 @@
     "url_path": "",
     "icon": "home-outlined",
     "component": "@/views/system/organization/OrganizationList.vue",
-    "path": "/organizations/list",
+    "path": "organizations/list",
     "redirect": "",
     "is_visible": true
   }
@@ -500,7 +764,7 @@
   "pk": 6,
   "fields": {
     "create_time": "2022-12-11T23:56:13.453",
-    "update_time": "2022-12-21T03:15:03.897",
+    "update_time": "2023-01-08T23:54:18.277",
     "creator": "admin",
     "modifier": "admin",
     "title": "服务器性能监控",
@@ -510,7 +774,7 @@
     "url_path": "",
     "icon": "cloud-server-outlined",
     "component": "@/views/system/server/ServerMonitor.vue",
-    "path": "/server/monitor",
+    "path": "server/monitor",
     "redirect": "",
     "is_visible": true
   }
@@ -1036,11 +1300,171 @@
   }
 },
 {
+  "model": "system.permission",
+  "pk": 35,
+  "fields": {
+    "create_time": "2023-01-08T22:54:37.754",
+    "update_time": "2023-01-08T23:51:02.106",
+    "creator": "admin",
+    "modifier": "admin",
+    "title": "项目管理",
+    "parent": null,
+    "is_menu": true,
+    "method": "",
+    "url_path": "",
+    "icon": "project-outlined",
+    "component": "@/layout/BasicLayout.vue",
+    "path": "/pm",
+    "redirect": "",
+    "is_visible": true
+  }
+},
+{
+  "model": "system.permission",
+  "pk": 36,
+  "fields": {
+    "create_time": "2023-01-08T23:24:27.623",
+    "update_time": "2023-01-09T00:40:34.970",
+    "creator": "admin",
+    "modifier": "admin",
+    "title": "项目列表",
+    "parent": 35,
+    "is_menu": true,
+    "method": "",
+    "url_path": "",
+    "icon": "appstore-outlined",
+    "component": "@/views/system/user/UserList.vue",
+    "path": "projects/list",
+    "redirect": "",
+    "is_visible": true
+  }
+},
+{
+  "model": "system.permission",
+  "pk": 37,
+  "fields": {
+    "create_time": "2023-01-09T00:42:04.833",
+    "update_time": "2023-01-09T00:42:04.833",
+    "creator": "admin",
+    "modifier": "admin",
+    "title": "新增项目",
+    "parent": 36,
+    "is_menu": false,
+    "method": "POST",
+    "url_path": "/pm/projects/",
+    "icon": "",
+    "component": "",
+    "path": "",
+    "redirect": "",
+    "is_visible": true
+  }
+},
+{
+  "model": "system.permission",
+  "pk": 38,
+  "fields": {
+    "create_time": "2023-01-09T00:42:56.087",
+    "update_time": "2023-01-09T00:42:56.087",
+    "creator": "admin",
+    "modifier": "admin",
+    "title": "删除项目",
+    "parent": 36,
+    "is_menu": false,
+    "method": "DELETE",
+    "url_path": "/pm/projects/\\d+/",
+    "icon": "",
+    "component": "",
+    "path": "",
+    "redirect": "",
+    "is_visible": true
+  }
+},
+{
+  "model": "system.permission",
+  "pk": 39,
+  "fields": {
+    "create_time": "2023-01-09T00:43:46.797",
+    "update_time": "2023-01-09T00:43:46.797",
+    "creator": "admin",
+    "modifier": "admin",
+    "title": "修改项目",
+    "parent": 36,
+    "is_menu": false,
+    "method": "PUT",
+    "url_path": "/pm/projects/\\d+/",
+    "icon": "",
+    "component": "",
+    "path": "",
+    "redirect": "",
+    "is_visible": true
+  }
+},
+{
+  "model": "system.permission",
+  "pk": 40,
+  "fields": {
+    "create_time": "2023-01-09T00:44:13.702",
+    "update_time": "2023-01-09T00:44:13.702",
+    "creator": "admin",
+    "modifier": "admin",
+    "title": "修改项目部分信息",
+    "parent": 36,
+    "is_menu": false,
+    "method": "PATCH",
+    "url_path": "/pm/projects/\\d+/",
+    "icon": "",
+    "component": "",
+    "path": "",
+    "redirect": "",
+    "is_visible": true
+  }
+},
+{
+  "model": "system.permission",
+  "pk": 41,
+  "fields": {
+    "create_time": "2023-01-09T00:44:59.591",
+    "update_time": "2023-01-09T00:44:59.591",
+    "creator": "admin",
+    "modifier": "admin",
+    "title": "查询项目详情",
+    "parent": 36,
+    "is_menu": false,
+    "method": "GET",
+    "url_path": "/pm/projects/\\d+/",
+    "icon": "",
+    "component": "",
+    "path": "",
+    "redirect": "",
+    "is_visible": true
+  }
+},
+{
+  "model": "system.permission",
+  "pk": 42,
+  "fields": {
+    "create_time": "2023-01-09T00:45:55.788",
+    "update_time": "2023-01-09T00:45:55.788",
+    "creator": "admin",
+    "modifier": "admin",
+    "title": "查询项目列表",
+    "parent": 36,
+    "is_menu": false,
+    "method": "GET",
+    "url_path": "/pm/projects/",
+    "icon": "",
+    "component": "",
+    "path": "",
+    "redirect": "",
+    "is_visible": true
+  }
+},
+{
   "model": "system.role",
   "pk": 1,
   "fields": {
     "create_time": "2022-12-11T23:45:23.748",
-    "update_time": "2022-12-12T00:44:45.950",
+    "update_time": "2023-01-09T00:46:35.941",
     "creator": "admin",
     "modifier": "admin",
     "name": "admin",
@@ -1077,7 +1501,15 @@
       30,
       31,
       32,
-      33
+      33,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42
     ]
   }
 },
@@ -1171,6 +1603,32 @@
   }
 },
 {
+  "model": "system.organization",
+  "pk": 6,
+  "fields": {
+    "create_time": "2023-01-07T04:19:40.970",
+    "update_time": "2023-01-09T01:01:52.385",
+    "creator": "admin",
+    "modifier": "admin",
+    "name": "UI组",
+    "type": "department",
+    "parent": 2
+  }
+},
+{
+  "model": "system.organization",
+  "pk": 7,
+  "fields": {
+    "create_time": "2023-01-08T22:39:36.171",
+    "update_time": "2023-01-08T22:39:36.171",
+    "creator": "admin",
+    "modifier": "admin",
+    "name": "产品组",
+    "type": "department",
+    "parent": 2
+  }
+},
+{
   "model": "system.user",
   "pk": 1,
   "fields": {
@@ -1185,7 +1643,7 @@
     "is_active": true,
     "date_joined": "2022-12-11T20:15:20.251",
     "name": "周立齐",
-    "birthday": null,
+    "birthday": "1999-03-16",
     "gender": "female",
     "mobile": "",
     "avatar": "avatars/brave.png",
@@ -1223,6 +1681,167 @@
     "user_permissions": [],
     "roles": [
       2
+    ]
+  }
+},
+{
+  "model": "system.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$cDavYtat24gJX9RJqrmqlz$KDJFwIdEoZ2BQ3IFOkIRcZWK7zXxvmxSgIiKMQmj+9U=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "sam",
+    "first_name": "",
+    "last_name": "",
+    "email": "sam@qq.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2023-01-08T22:30:09.895",
+    "name": "山姆",
+    "birthday": null,
+    "gender": "male",
+    "mobile": "",
+    "avatar": "avatars/brave.png",
+    "department": 6,
+    "position": "UI设计师",
+    "groups": [],
+    "user_permissions": [],
+    "roles": [
+      2
+    ]
+  }
+},
+{
+  "model": "system.user",
+  "pk": 4,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$H34jH1LfxfpGAOF1xGqf00$k8YDx+hCsG0oKSUNAEFYRXkUY77kal9CqMLO7SFBgRI=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "jack",
+    "first_name": "",
+    "last_name": "",
+    "email": "jack@qq.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2023-01-08T22:37:59.845",
+    "name": "杰克",
+    "birthday": null,
+    "gender": "male",
+    "mobile": "",
+    "avatar": "avatars/brave.png",
+    "department": 4,
+    "position": "后端开发工程师",
+    "groups": [],
+    "user_permissions": [],
+    "roles": [
+      2
+    ]
+  }
+},
+{
+  "model": "system.user",
+  "pk": 5,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$6KyB0grWufgImNXIBkmlWw$SQoPkd2U/+cBWfg1OzhRhFQ1k3OOZRGZg2bjkXFwZ8M=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "jane",
+    "first_name": "",
+    "last_name": "",
+    "email": "jane@qq.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2023-01-08T22:38:37.893",
+    "name": "简",
+    "birthday": null,
+    "gender": "male",
+    "mobile": "",
+    "avatar": "avatars/brave.png",
+    "department": 7,
+    "position": "产品经理",
+    "groups": [],
+    "user_permissions": [],
+    "roles": [
+      1,
+      2
+    ]
+  }
+},
+{
+  "model": "system.user",
+  "pk": 6,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$MeRJ1dxB1CD1O3j3sVDZQd$YcX0P7WsPAje+pHeFB3czxE2YiZ3r9JVEhmMottreDI=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "lucy",
+    "first_name": "",
+    "last_name": "",
+    "email": "lucy@qq.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2023-01-08T22:39:15.330",
+    "name": "路西",
+    "birthday": null,
+    "gender": "male",
+    "mobile": "",
+    "avatar": "avatars/brave.png",
+    "department": 5,
+    "position": "软件测试工程师",
+    "groups": [],
+    "user_permissions": [],
+    "roles": [
+      2
+    ]
+  }
+},
+{
+  "model": "system.user",
+  "pk": 7,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$EyxeO5dQ4zHASx8qZcBpLv$devEJ106YzQMqjXvIeH9l34aUXuKqPlMoMZQClSfuac=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "mary",
+    "first_name": "",
+    "last_name": "",
+    "email": "mary@qq.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2023-01-09T01:01:21.737",
+    "name": "玛丽",
+    "birthday": null,
+    "gender": "male",
+    "mobile": "",
+    "avatar": "avatars/brave.png",
+    "department": 3,
+    "position": "前端开发工程师",
+    "groups": [],
+    "user_permissions": [],
+    "roles": [
+      2
+    ]
+  }
+},
+{
+  "model": "project.project",
+  "pk": 1,
+  "fields": {
+    "create_time": "2023-01-09T01:02:31.520",
+    "update_time": "2023-01-09T01:07:36.814",
+    "creator": "jane",
+    "modifier": "jane",
+    "name": "数据工厂项目",
+    "owner": "jane",
+    "status": 2,
+    "members": [
+      3,
+      4,
+      5,
+      6,
+      7
     ]
   }
 }

@@ -4,3 +4,13 @@
 # @File    : urls.py
 # @Software: PyCharm
 # @Description:
+from django.urls import path, include
+from rest_framework import routers
+
+from project.views.project import ProjectViewSet
+
+router = routers.DefaultRouter()
+router.register(prefix=r'projects', viewset=ProjectViewSet, basename='project')
+urlpatterns = [
+    path('', include(router.urls)),
+]

@@ -55,6 +55,7 @@ INSTALLED_APPS = [
 
     'system',
     'ws_server',
+    'project'
 ]
 
 MIDDLEWARE = [
