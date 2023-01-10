@@ -28,7 +28,7 @@ class ProjectViewSet(ModelViewSet):
         """
         create project
 
-        `status` [(0, '未开始'), (1, '进行中'), (2, '已完成')]
+        @`status` [(0, '未开始'), (1, '进行中'), (2, '已完成')]
         """
         res = super().create(request, *args, **kwargs)
         return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_201_CREATED,
@@ -38,7 +38,7 @@ class ProjectViewSet(ModelViewSet):
         """
         select project list
 
-        `status` [(0, '未开始'), (1, '进行中'), (2, '已完成')]
+        @`status` [(0, '未开始'), (1, '进行中'), (2, '已完成')]
         """
         res = super().list(request, *args, **kwargs)
         return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_200_OK)
@@ -48,7 +48,7 @@ class ProjectViewSet(ModelViewSet):
         """
         select project detail
 
-        `status` [(0, '未开始'), (1, '进行中'), (2, '已完成')]
+        @`status` [(0, '未开始'), (1, '进行中'), (2, '已完成')]
         """
         res = super().retrieve(request, *args, **kwargs)
         return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_200_OK)
@@ -59,7 +59,7 @@ class ProjectViewSet(ModelViewSet):
         """
         update project detail
 
-        `status` [(0, '未开始'), (1, '进行中'), (2, '已完成')]
+        @`status` [(0, '未开始'), (1, '进行中'), (2, '已完成')]
         """
         res = super().update(request, *args, **kwargs)
         return JsonResponse(data=res.data, msg='success', code=20000)
@@ -71,7 +71,7 @@ class ProjectViewSet(ModelViewSet):
         """
         partial update project detail
 
-        `status` [(0, '未开始'), (1, '进行中'), (2, '已完成')]
+        @`status` [(0, '未开始'), (1, '进行中'), (2, '已完成')]
         """
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
@@ -79,7 +79,5 @@ class ProjectViewSet(ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         """
         delete project
-
-        `status` [(0, '未开始'), (1, '进行中'), (2, '已完成')]
         """
         return super().destroy(request, *args, **kwargs)

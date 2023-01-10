@@ -3,6 +3,7 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import status, serializers
 from rest_framework.decorators import action
 from rest_framework.viewsets import ModelViewSet
+from django_filters import rest_framework as filters
 
 from utils.drf_utils.custom_json_response import JsonResponse, unite_response_format_schema
 from system.serializers.permissions import PermissionCreateUpdateSerializer, PermissionRetrieveSerializer, \
@@ -13,9 +14,18 @@ from utils.drf_utils.model_utils import generate_object_tree_data
 logger = logging.getLogger('my_debug_logger')
 
 
+class PermissionFilter(filters.FilterSet):
+    title = filters.CharFilter(field_name='title', lookup_expr='icontains', label='权限名称(模糊搜索且不区分大小写)')
+
+    class Meta:
+        model = Permission
+        fields = ['title']
+
+
 @extend_schema(tags=['权限管理'])
 class PermissionViewSet(ModelViewSet):
     queryset = Permission.objects.all().order_by('-id')
+    filterset_class = PermissionFilter
 
     def get_serializer_class(self):
         if self.action in ['update', 'partial_update', 'create']:

@@ -5,6 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.generics import CreateAPIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView
+from django_filters import rest_framework as filters
 
 from utils.drf_utils.custom_json_response import JsonResponse, unite_response_format_schema
 from system.serializers.users import UserRegisterSerializer, MyTokenObtainPairSerializer, UserCreateUpdateSerializer, \
@@ -78,9 +79,19 @@ class UserRegisterView(CreateAPIView):
         return super().post(request, *args, **kwargs)
 
 
+class UserFilter(filters.FilterSet):
+    username = filters.CharFilter(field_name='username', lookup_expr='icontains',
+                                  label='用户名(模糊搜索且不区分大小写)')
+
+    class Meta:
+        model = User
+        fields = ['username']
+
+
 @extend_schema(tags=['用户管理'])
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all().order_by('-id')
+    filterset_class = UserFilter
 
     def get_serializer_class(self):
         if self.action in ['update', 'partial_update', 'create', 'update_profile']:

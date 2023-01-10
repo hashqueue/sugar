@@ -17,8 +17,8 @@ class RbacPermission(permissions.BasePermission):
         request_url_path = request.path
         request_method = request.method
         """演示环境禁止删除数据"""
-        if request.method == 'DELETE':
-            return False
+        # if request.method == 'DELETE':
+        #     return False
         """URL白名单 如果请求url在白名单, 放行"""
         for safe_url in WHITE_URL_LIST:
             if re.match(f'^{safe_url}$', request_url_path):
