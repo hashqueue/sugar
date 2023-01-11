@@ -120,7 +120,16 @@ class UserListDestroySerializer(serializers.ModelSerializer):
 class UserThinRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'avatar', 'name')
+        fields = ('id', 'username', 'email', 'avatar', 'name', 'position')
+
+
+class GetAllUserSerializer(serializers.ModelSerializer):
+    results = UserThinRetrieveSerializer(many=True, read_only=True)
+    count = serializers.IntegerField(help_text='用户总数量')
+
+    class Meta:
+        model = User
+        fields = ('results', 'count')
 
 
 class UserRetrieveSerializer(serializers.ModelSerializer):
