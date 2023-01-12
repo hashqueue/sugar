@@ -5,6 +5,7 @@ from drf_spectacular.utils import extend_schema
 from utils.drf_utils.custom_json_response import JsonResponse, unite_response_format_schema
 from project.serializers.projects import ProjectCreateUpdateSerializer, ProjectRetrieveSerializer
 from project.models import Project
+from system.models import User
 
 
 @extend_schema(tags=['项目管理'])
@@ -18,7 +19,13 @@ class ProjectViewSet(ModelViewSet):
             return ProjectRetrieveSerializer
 
     def perform_create(self, serializer):
-        serializer.save(creator=self.request.user.username, modifier=self.request.user.username)
+        # 新建项目时初始化项目成员，默认添加 项目负责人 和 发起当前请求的用户
+        init_members = set()
+        owner_id = User.objects.filter(username=self.request.data.get('owner', '')).first().id
+        init_members.add(owner_id)
+        init_members.add(self.request.user.id)
+        serializer.save(creator=self.request.user.username, modifier=self.request.user.username,
+                        members=list(init_members))
 
     def perform_update(self, serializer):
         serializer.save(modifier=self.request.user.username)
@@ -40,8 +47,22 @@ class ProjectViewSet(ModelViewSet):
 
         @`status` [(0, '未开始'), (1, '进行中'), (2, '已完成')]
         """
-        res = super().list(request, *args, **kwargs)
-        return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_200_OK)
+        is_request_user_in_project_members_list = []  # 只返回 当前请求的用户在项目的成员中 的数据
+        for project in self.get_queryset():
+            for member in self.get_serializer(project).data.get('members', []):
+                if self.request.user.username == member.get('username'):
+                    is_request_user_in_project_members_list.append(project)
+        # list action的源代码
+        queryset = self.filter_queryset(is_request_user_in_project_members_list)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            # 分页
+            serializer = self.get_serializer(page, many=True)
+            paginated_data = self.get_paginated_response(serializer.data).data
+            return JsonResponse(data=paginated_data, msg='success', code=20000, status=status.HTTP_200_OK)
+        serializer = self.get_serializer(queryset, many=True)
+        return JsonResponse(data=serializer.data, msg='success', code=20000, status=status.HTTP_200_OK)
 
     @extend_schema(responses=unite_response_format_schema('select-project-detail', ProjectRetrieveSerializer))
     def retrieve(self, request, *args, **kwargs):
