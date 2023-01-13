@@ -3,8 +3,8 @@ from rest_framework.viewsets import ModelViewSet
 from drf_spectacular.utils import extend_schema
 
 from utils.drf_utils.custom_json_response import JsonResponse, unite_response_format_schema
-from project.serializers.projects import ProjectCreateUpdateSerializer, ProjectRetrieveSerializer
-from project.models import Project
+from pm.serializers.projects import ProjectCreateUpdateSerializer, ProjectRetrieveSerializer
+from pm.models import Project
 from system.models import User
 
 

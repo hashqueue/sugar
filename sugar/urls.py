@@ -22,7 +22,7 @@ from . import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/<str:version>/system/', include('system.urls')),
-    path('api/<str:version>/pm/', include('project.urls')),
+    path('api/<str:version>/pm/', include('pm.urls')),
     # YOUR PATTERNS
     path('api/<str:version>/schema/', SpectacularAPIView.as_view(), name='schema'),
     # Optional UI:

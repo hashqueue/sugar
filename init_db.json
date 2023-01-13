@@ -1994,7 +1994,7 @@
   }
 },
 {
-  "model": "project.project",
+  "model": "pm.project",
   "pk": 1,
   "fields": {
     "create_time": "2023-01-12T23:52:28.142",
@@ -2015,7 +2015,7 @@
   }
 },
 {
-  "model": "project.project",
+  "model": "pm.project",
   "pk": 2,
   "fields": {
     "create_time": "2023-01-12T23:53:34.023",
