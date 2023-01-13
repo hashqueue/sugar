@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from drf_spectacular.utils import extend_schema
+from django_filters import rest_framework as filters
 
 from utils.drf_utils.custom_json_response import JsonResponse, unite_response_format_schema
 from pm.serializers.projects import ProjectCreateUpdateSerializer, ProjectRetrieveSerializer
@@ -8,9 +9,19 @@ from pm.models import Project
 from system.models import User
 
 
+class ProjectFilter(filters.FilterSet):
+    name = filters.CharFilter(field_name='name', lookup_expr='icontains', label='项目名称(模糊搜索且不区分大小写)')
+    owner = filters.CharFilter(field_name='owner', lookup_expr='icontains', label='负责人(模糊搜索且不区分大小写)')
+
+    class Meta:
+        model = Project
+        fields = ['name', 'status', 'owner']
+
+
 @extend_schema(tags=['项目管理'])
 class ProjectViewSet(ModelViewSet):
     queryset = Project.objects.all().order_by('-id')
+    filterset_class = ProjectFilter
 
     def get_serializer_class(self):
         if self.action in ['create', 'update', 'partial_update']:
