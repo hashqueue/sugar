@@ -11,7 +11,7 @@ from pm.models import Sprint
 class SprintFilter(filters.FilterSet):
     owner = filters.CharFilter(field_name='owner', lookup_expr='icontains', label='负责人(模糊搜索且不区分大小写)')
     name = filters.CharFilter(field_name='name', lookup_expr='icontains', label='迭代名称(模糊搜索且不区分大小写)')
-    project_id = filters.NumberFilter(field_name='project', lookup_expr='icontains', label='所属项目ID')
+    project_id = filters.NumberFilter(field_name='project', label='所属项目ID')
 
     class Meta:
         model = Sprint

@@ -58,14 +58,9 @@ class ProjectViewSet(ModelViewSet):
 
         @`status` [(0, '未开始'), (1, '进行中'), (2, '已完成')]
         """
-        is_request_user_in_project_members_list = []  # 只返回 当前请求的用户在项目的成员中 的数据
-        for project in self.get_queryset():
-            for member in self.get_serializer(project).data.get('members', []):
-                if self.request.user.username == member.get('username'):
-                    is_request_user_in_project_members_list.append(project)
-        # list action的源代码
-        queryset = self.filter_queryset(is_request_user_in_project_members_list)
-
+        # 只返回 当前请求的用户在项目的成员中 的数据
+        queryset = self.filter_queryset(
+            Project.objects.filter(members__username__contains=self.request.user.username).all())
         page = self.paginate_queryset(queryset)
         if page is not None:
             # 分页
