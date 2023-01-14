@@ -15,6 +15,8 @@ class SprintCreateUpdateSerializer(BaseModelSerializer):
 
 
 class SprintRetrieveSerializer(BaseModelSerializer):
+    start_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True, help_text='开始时间')
+    finish_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True, help_text='完成时间')
     owner_name = serializers.SerializerMethodField(help_text='负责人姓名')
     project_name = serializers.CharField(source='project.name', help_text='所属套件的名称')
     feature_count = serializers.SerializerMethodField(help_text='需求数量')
