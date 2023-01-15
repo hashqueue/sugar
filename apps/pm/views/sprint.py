@@ -40,7 +40,7 @@ class SprintViewSet(ModelViewSet):
         """
         create sprint
 
-        @`status` [(0, '未开始'), (1, '进行中'), (2, '已完成')]
+        @`status` = [(0, '未开始'), (1, '进行中'), (2, '已完成')]
         """
         res = super().create(request, *args, **kwargs)
         return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_201_CREATED,
@@ -49,8 +49,6 @@ class SprintViewSet(ModelViewSet):
     def list(self, request, *args, **kwargs):
         """
         select sprint list
-
-        @`status` [(0, '未开始'), (1, '进行中'), (2, '已完成')]
         """
         res = super().list(request, *args, **kwargs)
         return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_200_OK)
@@ -59,8 +57,6 @@ class SprintViewSet(ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         """
         select sprint detail
-
-        @`status` [(0, '未开始'), (1, '进行中'), (2, '已完成')]
         """
         res = super().retrieve(request, *args, **kwargs)
         return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_200_OK)
@@ -70,8 +66,6 @@ class SprintViewSet(ModelViewSet):
     def update(self, request, *args, **kwargs):
         """
         update sprint detail
-
-        @`status` [(0, '未开始'), (1, '进行中'), (2, '已完成')]
         """
         res = super().update(request, *args, **kwargs)
         return JsonResponse(data=res.data, msg='success', code=20000)
@@ -81,8 +75,6 @@ class SprintViewSet(ModelViewSet):
     def partial_update(self, request, *args, **kwargs):
         """
         partial update sprint detail
-
-        @`status` [(0, '未开始'), (1, '进行中'), (2, '已完成')]
         """
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
