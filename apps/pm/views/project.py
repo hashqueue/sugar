@@ -29,16 +29,34 @@ class ProjectViewSet(ModelViewSet):
         elif self.action in ['retrieve', 'destroy', 'list']:
             return ProjectRetrieveSerializer
 
-    def perform_create(self, serializer):
+    @staticmethod
+    def init_project_members(request):
         # 新建项目时初始化项目成员，默认添加 项目负责人 和 发起当前请求的用户
         init_members = set()
-        owner_id = User.objects.filter(username=self.request.data.get('owner', '')).first().id
+        owner_id = User.objects.filter(username=request.data.get('owner', '')).first().id
         init_members.add(owner_id)
-        init_members.add(self.request.user.id)
+        init_members.add(request.user.id)
+        return list(init_members)
+
+    def perform_create(self, serializer):
         serializer.save(creator=self.request.user.username, modifier=self.request.user.username,
-                        members=list(init_members))
+                        members=self.init_project_members(self.request))
 
     def perform_update(self, serializer):
+        # 更新项目时判断是否更新了 项目负责人
+        if self.request.data.get('owner', False):
+            project_id = self.kwargs.get('pk')
+            project_obj = Project.objects.filter(id=project_id).first()
+            if self.request.data.get('owner') != project_obj.owner:
+                members = set()
+                exists_members_qs = project_obj.members.values('id')
+                # 查询已有的成员
+                for exists_member in exists_members_qs:
+                    members.add(exists_member.get('id'))
+                # 在已有的成员里添加 新的 初始化成员
+                for init_member in self.init_project_members(self.request):
+                    members.add(init_member)
+                serializer.save(modifier=self.request.user.username, members=list(members))
         serializer.save(modifier=self.request.user.username)
 
     @extend_schema(responses=unite_response_format_schema('create-project', ProjectCreateUpdateSerializer))
@@ -58,7 +76,7 @@ class ProjectViewSet(ModelViewSet):
         """
         # 只返回 当前请求的用户在项目的成员中 的数据
         queryset = self.filter_queryset(
-            Project.objects.filter(members__username__contains=self.request.user.username).all())
+            Project.objects.filter(members__username__contains=self.request.user.username).all().order_by('-id'))
         page = self.paginate_queryset(queryset)
         if page is not None:
             # 分页

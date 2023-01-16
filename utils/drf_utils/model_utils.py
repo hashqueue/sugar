@@ -20,15 +20,16 @@ def get_user_permissions(user_obj):
     role_list = user_obj.roles.all()
     request_api_permissions = list()
     for role in role_list:
-        permission_list = role.permissions.all()
+        permission_list = role.permissions.values('method', 'url_path')
         for permission in permission_list:
-            # 去重
-            permission_data = {
-                'method': permission.method,
-                'url_path': permission.url_path
-            }
-            if permission_data not in request_api_permissions:
-                request_api_permissions.append(permission_data)
+            if permission.get('method') != '' and permission.get('url_path') != '':
+                # 去重
+                permission_data = {
+                    'method': permission.get('method'),
+                    'url_path': permission.get('url_path')
+                }
+                if permission_data not in request_api_permissions:
+                    request_api_permissions.append(permission_data)
     return request_api_permissions
 
 
