@@ -15,7 +15,7 @@ class WorkItemFilter(filters.FilterSet):
 
     class Meta:
         model = WorkItem
-        fields = ['sprint_id', 'name', 'status', 'owner']
+        fields = ['sprint_id', 'name', 'status', 'owner', 'type']
 
 
 @extend_schema(tags=['工作项管理'])
