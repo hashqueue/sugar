@@ -6,6 +6,7 @@ __pycache__/
 
 .idea
 aaa.py
+static/media/user_upload_files
 
 # C extensions
 *.so

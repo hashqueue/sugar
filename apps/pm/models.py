@@ -96,11 +96,16 @@ class WorkItem(BaseModel):
         return self.name
 
 
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_upload_files/user_<username>/<filename>
+    return f'user_upload_files/user_{instance.creator}/{filename}'
+
+
 class UserFile(BaseModel):
     """
     用户上传的静态文件
     """
-    file = models.FileField(upload_to='user_upload_files/', verbose_name='用户上传的静态文件',
+    file = models.FileField(upload_to=user_directory_path, verbose_name='用户上传的静态文件',
                             help_text='用户上传的静态文件')
     work_item = models.ForeignKey(WorkItem, null=True, blank=True, on_delete=models.SET_NULL, verbose_name="所属工作项",
                                   help_text='所属工作项')
