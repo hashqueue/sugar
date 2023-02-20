@@ -1,3 +1,5 @@
+import json
+
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from drf_spectacular.utils import extend_schema
@@ -5,7 +7,7 @@ from django_filters import rest_framework as filters
 
 from utils.drf_utils.custom_json_response import JsonResponse, unite_response_format_schema
 from pm.serializers.work_items import WorkItemCreateUpdateSerializer, WorkItemRetrieveSerializer
-from pm.models import WorkItem
+from pm.models import WorkItem, Changelog
 
 
 class WorkItemFilter(filters.FilterSet):
@@ -33,7 +35,43 @@ class WorkItemViewSet(ModelViewSet):
         serializer.save(creator=self.request.user.username, modifier=self.request.user.username)
 
     def perform_update(self, serializer):
-        serializer.save(modifier=self.request.user.username)
+        origin_work_item_obj = WorkItem.objects.get(id=self.kwargs.get('pk'))
+        origin_data: dict = WorkItemCreateUpdateSerializer(instance=origin_work_item_obj).data
+        serializer.save(modifier=self.request.user.username)  # 更新数据并入库
+        current_data: dict = serializer.data
+        ignore_columns = ['id', 'create_time', 'update_time', 'creator', 'modifier', 'sprint', 'parent', 'type',
+                          'followers']
+        mapping_columns_data = {'priority': dict(WorkItem.PRIORITY_CHOICES),
+                                'status': dict(WorkItem.WORK_ITEM_STATUS_CHOICES),
+                                'severity': dict(WorkItem.SEVERITY_CHOICES),
+                                'bug_type': dict(WorkItem.BUG_TYPE_CHOICES),
+                                'process_result': dict(WorkItem.PROCESS_RESULT_CHOICES)}
+        columns_desc = {'name': '标题', 'owner': '负责人', 'priority': '优先级', 'status': '状态',
+                        'severity': '严重程度', 'bug_type': '缺陷类型', 'process_result': '处理结果', 'desc': '描述',
+                        'deadline': '截止日期', 'followers': '关注者'}
+        diff_results = []
+        for key, value in current_data.items():
+            if key not in ignore_columns:
+                if value != origin_data.get(key):
+                    # 当前值与历史值不同时
+                    if key in mapping_columns_data.keys():
+                        diff_results.append({'key': key, 'desc': columns_desc.get(key),
+                                             'origin': self.check_is_value_null(
+                                                 mapping_columns_data.get(key).get(origin_data.get(key))),
+                                             'current': self.check_is_value_null(
+                                                 mapping_columns_data.get(key).get(value))})
+                    else:
+                        diff_results.append({'key': key, 'desc': columns_desc.get(key),
+                                             'origin': self.check_is_value_null(origin_data.get(key)),
+                                             'current': self.check_is_value_null(value)})
+        Changelog.objects.create(changelog=diff_results, work_item=WorkItem.objects.get(id=self.kwargs.get('pk')),
+                                 creator=self.request.user.username)
+
+    @staticmethod
+    def check_is_value_null(value):
+        if value is None:
+            return 'null'
+        return value
 
     @extend_schema(responses=unite_response_format_schema('create-work-item', WorkItemCreateUpdateSerializer))
     def create(self, request, *args, **kwargs):

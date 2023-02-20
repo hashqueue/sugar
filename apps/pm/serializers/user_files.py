@@ -23,7 +23,7 @@ class UserFileCreateUpdateSerializer(BaseModelSerializer):
 class UserFileRetrieveSerializer(BaseModelSerializer):
     creator_name = serializers.SerializerMethodField(help_text='创建人姓名')
     file_name = serializers.SerializerMethodField(help_text='文件名称')
-    size = serializers.SerializerMethodField(help_text='文件大小(Mb)')
+    size = serializers.SerializerMethodField(help_text='文件大小')
 
     class Meta:
         model = UserFile

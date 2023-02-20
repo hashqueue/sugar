@@ -142,7 +142,7 @@ class Changelog(BaseModel):
     """
     工作项变更记录
     """
-    changelog = models.TextField(verbose_name='变更记录内容', help_text='变更记录内容')
+    changelog = models.JSONField(verbose_name='变更记录内容', help_text='变更记录内容')
     work_item = models.ForeignKey(WorkItem, null=True, blank=True, on_delete=models.SET_NULL, verbose_name="所属工作项",
                                   help_text='所属工作项')
 
