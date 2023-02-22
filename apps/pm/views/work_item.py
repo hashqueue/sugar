@@ -13,11 +13,13 @@ from pm.models import WorkItem, Changelog
 class WorkItemFilter(filters.FilterSet):
     owner = filters.CharFilter(field_name='owner', lookup_expr='icontains', label='负责人(模糊搜索且不区分大小写)')
     name = filters.CharFilter(field_name='name', lookup_expr='icontains', label='工作项名称(模糊搜索且不区分大小写)')
+    desc = filters.CharFilter(field_name='desc', lookup_expr='icontains', label='描述(模糊搜索且不区分大小写)')
+    creator = filters.CharFilter(field_name='creator', lookup_expr='icontains', label='创建人(模糊搜索且不区分大小写)')
     sprint_id = filters.NumberFilter(field_name='sprint', label='所属迭代ID')
 
     class Meta:
         model = WorkItem
-        fields = ['sprint_id', 'name', 'status', 'owner', 'type']
+        fields = ['sprint_id', 'name', 'status', 'owner', 'type', 'priority', 'severity', 'bug_type', 'process_result']
 
 
 @extend_schema(tags=['工作项管理'])

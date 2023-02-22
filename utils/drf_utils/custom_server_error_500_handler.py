@@ -1,4 +1,3 @@
-# @ProjectName: beer_server
 # @FileName: custom_server_error_500_handler.py
 
 from django.http import JsonResponse

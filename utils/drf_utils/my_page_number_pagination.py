@@ -29,6 +29,7 @@ class MyPageNumberPagination(PageNumberPagination):
         response = super().get_paginated_response(data)
         response.data['total_pages'] = self.page.paginator.num_pages
         response.data['current_page'] = self.page.number
+        response.data['page_size'] = self.get_page_size(self.request)
         return Response(response.data)
 
     def get_paginated_response_schema(self, schema):
@@ -39,6 +40,7 @@ class MyPageNumberPagination(PageNumberPagination):
         schema_data['description'] = '数据'
         schema_data['properties']['total_pages'] = {'type': 'integer', 'example': 5}
         schema_data['properties']['current_page'] = {'type': 'integer', 'example': 1}
+        schema_data['properties']['page_size'] = {'type': 'integer', 'example': 10}
         return {'type': 'object', 'properties': {
             'code': {
                 'type': 'integer',
