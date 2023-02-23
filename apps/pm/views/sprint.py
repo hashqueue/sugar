@@ -11,11 +11,12 @@ from pm.models import Sprint
 class SprintFilter(filters.FilterSet):
     owner = filters.CharFilter(field_name='owner', lookup_expr='icontains', label='负责人(模糊搜索且不区分大小写)')
     name = filters.CharFilter(field_name='name', lookup_expr='icontains', label='迭代名称(模糊搜索且不区分大小写)')
+    creator = filters.CharFilter(field_name='creator', lookup_expr='icontains', label='创建人(模糊搜索且不区分大小写)')
     project_id = filters.NumberFilter(field_name='project', label='所属项目ID')
 
     class Meta:
         model = Sprint
-        fields = ['project_id', 'name', 'status', 'owner']
+        fields = ['project_id', 'name', 'status', 'owner', 'creator']
 
 
 @extend_schema(tags=['迭代管理'])
