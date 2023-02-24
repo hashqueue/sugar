@@ -15,7 +15,7 @@ class ProjectFilter(filters.FilterSet):
 
     class Meta:
         model = Project
-        fields = ['name', 'status', 'owner']
+        fields = ['name', 'project_status', 'owner']
 
 
 @extend_schema(tags=['项目管理'])
@@ -64,7 +64,7 @@ class ProjectViewSet(ModelViewSet):
         """
         create project
 
-        @`status` = [(0, '未开始'), (1, '进行中'), (2, '已完成')]
+        @`project_status` = [(0, '未开始'), (1, '进行中'), (2, '已完成')]
         """
         res = super().create(request, *args, **kwargs)
         return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_201_CREATED,

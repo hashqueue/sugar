@@ -70,7 +70,7 @@ MIDDLEWARE = [
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Sugar API',
-    'DESCRIPTION': 'Sugar研发管理平台接口文档',
+    'DESCRIPTION': 'Sugar - 一站式项目研发管理平台接口文档',
     'VERSION': '1.0.0',
     'CONTACT': {"email": "1912315910@qq.com"},
     'LICENSE': {"name": "MIT License"},

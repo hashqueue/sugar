@@ -16,7 +16,7 @@ class SprintFilter(filters.FilterSet):
 
     class Meta:
         model = Sprint
-        fields = ['project_id', 'name', 'status', 'owner', 'creator']
+        fields = ['project_id', 'name', 'sprint_status', 'owner', 'creator']
 
 
 @extend_schema(tags=['迭代管理'])
@@ -41,7 +41,7 @@ class SprintViewSet(ModelViewSet):
         """
         create sprint
 
-        @`status` = [(0, '未开始'), (1, '进行中'), (2, '已完成')]
+        @`sprint_status` = [(0, '未开始'), (1, '进行中'), (2, '已完成')]
         """
         res = super().create(request, *args, **kwargs)
         return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_201_CREATED,

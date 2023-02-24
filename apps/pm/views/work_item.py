@@ -1,5 +1,3 @@
-import json
-
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from drf_spectacular.utils import extend_schema
@@ -19,7 +17,8 @@ class WorkItemFilter(filters.FilterSet):
 
     class Meta:
         model = WorkItem
-        fields = ['sprint_id', 'name', 'status', 'owner', 'type', 'priority', 'severity', 'bug_type', 'process_result']
+        fields = ['sprint_id', 'name', 'work_item_status', 'owner', 'work_item_type', 'priority', 'severity',
+                  'bug_type', 'process_result', 'desc', 'creator']
 
 
 @extend_schema(tags=['工作项管理'])
@@ -41,14 +40,14 @@ class WorkItemViewSet(ModelViewSet):
         origin_data: dict = WorkItemCreateUpdateSerializer(instance=origin_work_item_obj).data
         serializer.save(modifier=self.request.user.username)  # 更新数据并入库
         current_data: dict = serializer.data
-        ignore_columns = ['id', 'create_time', 'update_time', 'creator', 'modifier', 'sprint', 'parent', 'type',
-                          'followers']
+        ignore_columns = ['id', 'create_time', 'update_time', 'creator', 'modifier', 'sprint', 'parent',
+                          'work_item_type', 'followers']
         mapping_columns_data = {'priority': dict(WorkItem.PRIORITY_CHOICES),
-                                'status': dict(WorkItem.WORK_ITEM_STATUS_CHOICES),
+                                'work_item_status': dict(WorkItem.WORK_ITEM_STATUS_CHOICES),
                                 'severity': dict(WorkItem.SEVERITY_CHOICES),
                                 'bug_type': dict(WorkItem.BUG_TYPE_CHOICES),
                                 'process_result': dict(WorkItem.PROCESS_RESULT_CHOICES)}
-        columns_desc = {'name': '标题', 'owner': '负责人', 'priority': '优先级', 'status': '状态',
+        columns_desc = {'name': '标题', 'owner': '负责人', 'priority': '优先级', 'work_item_status': '状态',
                         'severity': '严重程度', 'bug_type': '缺陷类型', 'process_result': '处理结果', 'desc': '描述',
                         'deadline': '截止日期', 'followers': '关注者'}
         diff_results = []
@@ -80,7 +79,7 @@ class WorkItemViewSet(ModelViewSet):
         """
         create work-item
 
-        @`type` = [(0, '需求'), (1, '任务'), (2, '缺陷')]
+        @`work_item_type` = [(0, '需求'), (1, '任务'), (2, '缺陷')]
         
         @`bug_type` = [
             (0, '功能问题'), (1, '性能问题'), (2, '接口问题'), (3, '安全问题'), (4, 'UI界面问题'), (5, '易用性问题'),
@@ -96,7 +95,7 @@ class WorkItemViewSet(ModelViewSet):
         
         @`severity` = [(0, '保留'), (1, '建议'), (2, '提示'), (3, '一般'), (4, '严重'), (5, '致命')]
         
-        @`status` = [
+        @`work_item_status` = [
             (0, '未开始'), (1, '待处理'), (2, '重新打开'), (3, '进行中'), (4, '实现中'), (5, '已完成'), (6, '修复中'),
             (7, '已实现'), (8, '关闭'), (9, '已修复'), (10, '已验证'), (11, '已拒绝')
         ]

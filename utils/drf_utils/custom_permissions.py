@@ -24,8 +24,8 @@ class RbacPermission(permissions.BasePermission):
             if re.match(f'^{safe_url}$', request_url_path):
                 return True
         """如果用户是超级用户, 则放开权限(只用作系统初始化时注册的superuser用户添加初始数据时使用)"""
-        # if request.user.is_superuser:
-        #     return True
+        if request.user.is_superuser:
+            return True
         """RBAC API权限验证"""
         # API权限验证
         user_permissions = get_user_permissions(request.user)

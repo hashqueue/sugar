@@ -11,8 +11,9 @@ class Project(BaseModel):
     name = models.CharField(max_length=64, verbose_name="项目名称", help_text='项目名称')
     members = models.ManyToManyField(User, blank=True, verbose_name="项目成员", help_text='项目成员')
     owner = models.CharField(max_length=150, verbose_name='负责人', help_text='负责人')
-    status = models.PositiveSmallIntegerField(choices=PROJECT_STATUS_CHOICES, default=0, verbose_name='项目状态',
-                                              help_text='项目状态')
+    project_status = models.PositiveSmallIntegerField(choices=PROJECT_STATUS_CHOICES, default=0,
+                                                      verbose_name='项目状态',
+                                                      help_text='项目状态')
 
     class Meta:
         db_table = 'pm_project'
@@ -34,8 +35,8 @@ class Sprint(BaseModel):
     owner = models.CharField(max_length=150, verbose_name='负责人', help_text='负责人')
     start_time = models.DateTimeField(null=True, blank=True, verbose_name="开始时间", help_text='开始时间')
     finish_time = models.DateTimeField(null=True, blank=True, verbose_name="完成时间", help_text='完成时间')
-    status = models.PositiveSmallIntegerField(choices=SPRINT_STATUS_CHOICES, default=0, verbose_name='迭代状态',
-                                              help_text='迭代状态')
+    sprint_status = models.PositiveSmallIntegerField(choices=SPRINT_STATUS_CHOICES, default=0, verbose_name='迭代状态',
+                                                     help_text='迭代状态')
 
     class Meta:
         db_table = 'pm_sprint'
@@ -67,14 +68,15 @@ class WorkItem(BaseModel):
     ]
     name = models.CharField(max_length=64, verbose_name="工作项名称", help_text='工作项名称')
     owner = models.CharField(max_length=150, verbose_name='负责人', help_text='负责人')
-    type = models.PositiveSmallIntegerField(choices=WORK_ITEM_TYPE_CHOICES, verbose_name='工作项类型',
-                                            help_text='工作项类型')
+    work_item_type = models.PositiveSmallIntegerField(choices=WORK_ITEM_TYPE_CHOICES, verbose_name='工作项类型',
+                                                      help_text='工作项类型')
     priority = models.PositiveSmallIntegerField(choices=PRIORITY_CHOICES, verbose_name='优先级', help_text='优先级')
 
     sprint = models.ForeignKey(Sprint, null=True, blank=True, on_delete=models.SET_NULL, verbose_name="所属迭代",
                                help_text='所属迭代')
-    status = models.PositiveSmallIntegerField(choices=WORK_ITEM_STATUS_CHOICES, default=0, verbose_name='状态',
-                                              help_text='状态')
+    work_item_status = models.PositiveSmallIntegerField(choices=WORK_ITEM_STATUS_CHOICES, default=0,
+                                                        verbose_name='状态',
+                                                        help_text='状态')
     severity = models.PositiveSmallIntegerField(null=True, blank=True, choices=SEVERITY_CHOICES,
                                                 verbose_name='缺陷严重程度', help_text='缺陷严重程度')
     bug_type = models.PositiveSmallIntegerField(choices=BUG_TYPE_CHOICES, null=True, blank=True,
