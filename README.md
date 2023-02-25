@@ -26,6 +26,13 @@ python3 manage.py loaddata init_db.json
 python3 manage.py runserver
 # 前端开发环境搭建见前端仓库 https://github.com/hashqueue/sugar-web.git
 #####################################################
+###                     celery                    ###
+#####################################################
+# 启动celery worker
+celery -A sugar worker -l info --logfile=./logs/celery_worker.log
+# 启动celery beat
+celery -A sugar beat -l info -S django --logfile=./logs/celery_beat.log
+#####################################################
 ###               Done!下边的命令了解即可            ###
 #####################################################
 # 生产环境使用开发服务器启动时手动指定读取哪个env文件(项目根目录下的.env.prod)

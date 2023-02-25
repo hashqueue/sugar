@@ -5,7 +5,6 @@ from drf_spectacular.types import OpenApiTypes
 from system.models import User
 from device.models import Device
 from utils.drf_utils.base_model_serializer import BaseModelSerializer
-# from utils.base.common import check_device_ssh_available
 
 
 class DeviceCreateUpdateSerializer(BaseModelSerializer):

@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'drf_spectacular',
+    'django_celery_beat',
 
     'system',
     'ws_server',
@@ -207,6 +208,15 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = False
+
+# Celery配置选项
+# 配置时区,使用与django项目相同的时区设置
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_ENABLE_UTC = False
+DJANGO_CELERY_BEAT_TZ_AWARE = False
+
+# 异步任务相关配置
+CHECK_DEVICE_ALIVE_TIME = env('CHECK_DEVICE_ALIVE_TIME')  # 检查设备是否存活的间隔时间，单位为秒(s)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
