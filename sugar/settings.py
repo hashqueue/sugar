@@ -55,7 +55,8 @@ INSTALLED_APPS = [
 
     'system',
     'ws_server',
-    'pm'
+    'pm',
+    'device'
 ]
 
 MIDDLEWARE = [
