@@ -1,13 +1,17 @@
 import json
 
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema
 from django_filters import rest_framework as filters
 from django_celery_beat.models import PeriodicTask, IntervalSchedule
+from django.core.cache import cache
 
 from utils.drf_utils.custom_json_response import JsonResponse, unite_response_format_schema
-from device.serializers.devices import DeviceCreateUpdateSerializer, DeviceRetrieveSerializer
+from device.serializers.devices import DeviceCreateUpdateSerializer, DeviceRetrieveSerializer, \
+    GetDeviceAliveLogSerializer
 from device.models import Device
 from sugar.settings import TASK_CHECK_DEVICE_ALIVE_TIME
 
@@ -121,3 +125,16 @@ class DeviceViewSet(ModelViewSet):
         delete device
         """
         return super().destroy(request, *args, **kwargs)
+
+    @extend_schema(responses=unite_response_format_schema('get-device-alive-logs', GetDeviceAliveLogSerializer))
+    @action(methods=['get'], detail=True, url_path='device-alive-logs')
+    def get_device_check_alive_log(self, request, pk=None, version=None):
+        get_object_or_404(Device, pk=pk)
+        device_cache_keys = cache.keys(f'{pk}_*')
+        if device_cache_keys:
+            cache_datas = cache.get_many(device_cache_keys)
+            results = [{float(key.split('_')[-1]): json.loads(value)} for key, value in cache_datas.items()]
+            # 根据时间戳进行排序
+            results.sort(key=lambda x: list(x.keys())[0], reverse=True)
+            return JsonResponse({"results": [list(item.values())[0] for item in results]}, msg='success', code=20000)
+        return JsonResponse({"results": []}, msg='success', code=20000)
