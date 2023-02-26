@@ -1,5 +1,6 @@
 amqp==5.1.1
 asgiref==3.5.2
+async-timeout==4.0.2
 attrs==21.4.0
 autobahn==22.7.1
 Automat==22.10.0
@@ -19,6 +20,7 @@ Django==3.2.16
 django-celery-beat==2.4.0
 django-environ==0.9.0
 django-filter==22.1
+django-redis==5.2.0
 django-timezone-field==5.0
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
@@ -46,6 +48,7 @@ python-crontab==2.7.1
 python-dateutil==2.8.2
 pytz==2022.1
 PyYAML==6.0
+redis==4.5.1
 service-identity==21.1.0
 six==1.16.0
 sqlparse==0.4.2

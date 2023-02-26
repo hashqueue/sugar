@@ -9,7 +9,7 @@ from django_celery_beat.models import PeriodicTask, IntervalSchedule
 from utils.drf_utils.custom_json_response import JsonResponse, unite_response_format_schema
 from device.serializers.devices import DeviceCreateUpdateSerializer, DeviceRetrieveSerializer
 from device.models import Device
-from sugar.settings import CHECK_DEVICE_ALIVE_TIME
+from sugar.settings import TASK_CHECK_DEVICE_ALIVE_TIME
 
 
 class DeviceFilter(filters.FilterSet):
@@ -37,7 +37,7 @@ class DeviceViewSet(ModelViewSet):
         serializer.save(creator=self.request.user.username, modifier=self.request.user.username)
         data = serializer.data
         # 注册设备探活定时任务
-        schedule, created = IntervalSchedule.objects.get_or_create(every=int(CHECK_DEVICE_ALIVE_TIME),
+        schedule, created = IntervalSchedule.objects.get_or_create(every=int(TASK_CHECK_DEVICE_ALIVE_TIME),
                                                                    period=IntervalSchedule.SECONDS, )
         PeriodicTask.objects.create(
             interval=schedule,  # we created this above.

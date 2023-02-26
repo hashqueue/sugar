@@ -178,6 +178,17 @@ DATABASES = {
     }
 }
 
+# CACHES
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": env('REDIS_CONNECT_URL'),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -216,7 +227,8 @@ CELERY_ENABLE_UTC = False
 DJANGO_CELERY_BEAT_TZ_AWARE = False
 
 # 异步任务相关配置
-CHECK_DEVICE_ALIVE_TIME = env('CHECK_DEVICE_ALIVE_TIME')  # 检查设备是否存活的间隔时间，单位为秒(s)
+TASK_CHECK_DEVICE_ALIVE_TIME = env('TASK_CHECK_DEVICE_ALIVE_TIME')
+TASK_CHECK_DEVICE_ALIVE_RESULT_TIMEOUT = env('TASK_CHECK_DEVICE_ALIVE_RESULT_TIMEOUT')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/

@@ -28,10 +28,16 @@ python3 manage.py runserver
 #####################################################
 ###                     celery                    ###
 #####################################################
+# 使用docker在本地快速启动一个rabbitmq服务器
+docker run -d --name ramq -p 5672:5672 -p 25672:25672 -p 15672:15672 -p 15692:15692 -p 15675:15675 -p 1883:1883 -v /home/hashqueue/rabbitmq:/var/lib/rabbitmq rabbitmq:management
 # 启动celery worker
 celery -A sugar worker -l info --logfile=./logs/celery_worker.log
 # 启动celery beat
 celery -A sugar beat -l info -S django --logfile=./logs/celery_beat.log
+#####################################################
+###                     redis                     ###
+#####################################################
+docker run --name redis -d -p 6381:6379 -v /home/hashqueue/redisdata:/data redis:latest redis-server --save 180 1 --loglevel warning
 #####################################################
 ###               Done!下边的命令了解即可            ###
 #####################################################

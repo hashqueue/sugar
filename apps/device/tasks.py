@@ -1,10 +1,13 @@
 import datetime
 import logging
+import json
 
 import paramiko
 from celery import Task as CTask, shared_task
+from django.core.cache import cache
 
 from device.models import Device
+from sugar.settings import TASK_CHECK_DEVICE_ALIVE_RESULT_TIMEOUT
 
 logger = logging.getLogger('my_debug_logger')
 
@@ -20,6 +23,14 @@ class CheckDeviceStatusTask(CTask):
         @param kwargs: {'host': '192.168.124.16', 'username': 'ubuntu'}
         @return:
         """
+        kwargs.pop('password')
+        device_id = kwargs.get('device_id')
+        timestamp = datetime.datetime.timestamp(datetime.datetime.now())  # 1677398336.289207
+        complete_time = datetime.datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%d %H:%M:%S')
+        val = {'task_id': task_id, 'task_status': 'success', 'args': args, 'kwargs': kwargs, 'error': None,
+               'task_result': retval, 'complete_time': complete_time}
+        cache.set(key=f'{device_id}_{timestamp}', value=json.dumps(val),
+                  timeout=int(TASK_CHECK_DEVICE_ALIVE_RESULT_TIMEOUT))
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
         """
@@ -31,6 +42,14 @@ class CheckDeviceStatusTask(CTask):
         @param einfo: 错误详细信息
         @return:
         """
+        kwargs.pop('password')
+        device_id = kwargs.get('device_id')
+        timestamp = datetime.datetime.timestamp(datetime.datetime.now())  # 1677398336.289207
+        complete_time = datetime.datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%d %H:%M:%S')
+        val = {'task_id': task_id, 'task_status': 'failure', 'args': args, 'kwargs': kwargs, 'error': einfo,
+               'task_result': None, 'complete_time': complete_time}
+        cache.set(key=f'{device_id}_{timestamp}', value=json.dumps(val),
+                  timeout=int(TASK_CHECK_DEVICE_ALIVE_RESULT_TIMEOUT))
 
 
 @shared_task(base=CheckDeviceStatusTask)
@@ -63,4 +82,4 @@ def check_device_is_alive(host: str, username: str, password: str, port: int, de
         device1 = Device.objects.get(id=device_id)
         if device1.device_status:
             Device.objects.filter(id=device_id).update(device_status=0, update_time=datetime.datetime.now())
-        return {'result': True, 'msg': str(e)}
+        return {'result': False, 'msg': str(e)}
