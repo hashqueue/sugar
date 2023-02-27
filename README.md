@@ -33,7 +33,9 @@ docker run -d --name ramq -p 5672:5672 -p 25672:25672 -p 15672:15672 -p 15692:15
 # 启动celery worker
 celery -A sugar worker -l info --logfile=./logs/celery_worker.log
 # 启动celery beat
-celery -A sugar beat -l info -S django --logfile=./logs/celery_beat.log
+celery -A sugar beat -l info --logfile=./logs/celery_beat.log
+# 检查celery配置项是否正确，会直接修改settings.py文件
+celery upgrade settings ./sugar/settings.py --django
 #####################################################
 ###                     redis                     ###
 #####################################################

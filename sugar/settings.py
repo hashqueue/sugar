@@ -225,6 +225,14 @@ USE_TZ = False
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_ENABLE_UTC = False
 DJANGO_CELERY_BEAT_TZ_AWARE = False
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_TASK_ROUTES = {
+    'device.tasks.check_device_is_alive': {'queue': 'check_device_alive', 'routing_key': 'check_device_alive'},
+}
+CELERY_TASK_QUEUES = {
+    # queue name : { ...configs }
+    'check_device_alive': {'exchange': 'sugar', 'exchange_type': 'direct', 'routing_key': 'check_device_alive'}
+}
 
 # 异步任务相关配置
 TASK_CHECK_DEVICE_ALIVE_TIME = env('TASK_CHECK_DEVICE_ALIVE_TIME')

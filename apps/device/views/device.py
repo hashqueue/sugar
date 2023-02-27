@@ -61,6 +61,7 @@ class DeviceViewSet(ModelViewSet):
             task.kwargs = json.dumps({'host': data.get('host'), 'username': data.get('username'),
                                       'password': data.get('password'), 'port': data.get('port'),
                                       'device_id': data.get('id')})
+            task.last_run_at = None
             task.save()
 
     def perform_destroy(self, instance):
@@ -68,6 +69,7 @@ class DeviceViewSet(ModelViewSet):
         task = PeriodicTask.objects.filter(name__startswith=str(instance.id)).first()
         if task:
             task.enabled = False
+            task.last_run_at = None
             task.save()
             task.delete()
         instance.delete()

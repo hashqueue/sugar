@@ -7,8 +7,8 @@ done
 echo "MySQL service has been deployed. "
 
 ENV_PATH=.env.prod python3 manage.py collectstatic --noinput \
-    && echo "Static file collection is complete." \
+    && echo "Static file collection is completed." \
     && ENV_PATH=.env.prod python3 manage.py makemigrations \
     && ENV_PATH=.env.prod python3 manage.py migrate \
-    && echo "Data migration complete." \
+    && echo "MySQL data migration is completed." \
     && ENV_PATH=.env.prod daphne -b 0.0.0.0 -p 8000 --access-log logs/access-daphne.log sugar.asgi:application
