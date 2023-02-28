@@ -16,7 +16,8 @@ from datetime import timedelta
 from pathlib import Path
 
 env = environ.Env(DEBUG=(bool, False))
-# Now `ENV_PATH=.env.prod ./manage.py runserver` uses `.env.prod` file while `./manage.py runserver` uses `.env` file.
+# Now `ENV_PATH=.env.prod ./manage.py runserver` uses `.env.prod` file
+# while `./manage.py runserver` uses `.env.dev` file.
 env.read_env(env.str('ENV_PATH', '.env.dev'))
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,11 +29,11 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps/'))
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
-DEFAULT_USER_PASSWORD = env('DEFAULT_USER_PASSWORD')
+SECRET_KEY = env('BASE_SECRET_KEY')
+DEFAULT_USER_PASSWORD = env('BASE_DEFAULT_USER_PASSWORD')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = env('BASE_DEBUG')
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
@@ -79,8 +80,8 @@ SPECTACULAR_SETTINGS = {
     'SERVERS': [{"url": "http://127.0.0.1:8000"}],
 }
 
-API_VERSION = env('API_VERSION')
-API_PREFIX = env('API_PREFIX')
+API_VERSION = env('BASE_API_VERSION')
+API_PREFIX = env('BASE_API_PREFIX')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -182,7 +183,7 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": env('REDIS_CONNECT_URL'),
+        "LOCATION": f"redis://{env('REDIS_HOST')}:{env('REDIS_PORT')}/{env('REDIS_DB')}",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -223,6 +224,8 @@ USE_TZ = False
 # Celery配置选项
 # 配置时区,使用与django项目相同的时区设置
 CELERY_TIMEZONE = TIME_ZONE
+CELERY_BROKER_URL = f"amqp://{env('RABBITMQ_USER')}:{env('RABBITMQ_PASSWORD')}@{env('RABBITMQ_HOST')}:" \
+                    f"{env('RABBITMQ_PORT')}//"
 CELERY_ENABLE_UTC = False
 DJANGO_CELERY_BEAT_TZ_AWARE = False
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
