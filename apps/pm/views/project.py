@@ -1,8 +1,10 @@
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema
 from django_filters import rest_framework as filters
 
+from system.serializers.users import UserThinRetrieveSerializer, GetAllUserSerializer
 from utils.drf_utils.custom_json_response import JsonResponse, unite_response_format_schema
 from pm.serializers.projects import ProjectCreateUpdateSerializer, ProjectRetrieveSerializer
 from pm.models import Project
@@ -118,3 +120,14 @@ class ProjectViewSet(ModelViewSet):
         delete project
         """
         return super().destroy(request, *args, **kwargs)
+
+    @extend_schema(responses=unite_response_format_schema('get-project-members', GetAllUserSerializer))
+    @action(methods=['get'], detail=True, url_path='members')
+    def get_user_statistics(self, request, pk=None, version=None):
+        """
+        获取当前项目下的所有成员
+        """
+        serializer = UserThinRetrieveSerializer(
+            User.objects.filter(id__in=Project.objects.filter(id=pk).values('members').all()).all(), many=True,
+            context={'request': request})
+        return JsonResponse(data={'results': serializer.data, 'count': len(serializer.data)}, msg='success', code=20000)
