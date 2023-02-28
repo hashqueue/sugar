@@ -8,7 +8,7 @@ from django_filters import rest_framework as filters
 
 from utils.drf_utils.custom_json_response import JsonResponse, unite_response_format_schema
 from system.serializers.permissions import PermissionCreateUpdateSerializer, PermissionRetrieveSerializer, \
-    GetPermissionsTreeWithRoleIdsSerializer, PermissionTreeSerializer, PermissionBaseRetrieveSerializer
+    GetPermissionsWithRoleIdsSerializer, PermissionTreeSerializer, PermissionBaseRetrieveSerializer
 from system.models import Permission, Role
 from utils.drf_utils.model_utils import generate_object_tree_data
 
@@ -36,7 +36,7 @@ class PermissionViewSet(ModelViewSet):
         elif self.action == 'list':
             return PermissionBaseRetrieveSerializer
         elif self.action == 'get_permissions_whit_roles':
-            return GetPermissionsTreeWithRoleIdsSerializer
+            return GetPermissionsWithRoleIdsSerializer
         elif self.action == 'get_permission_tree_list':
             return PermissionTreeSerializer
 
@@ -96,22 +96,18 @@ class PermissionViewSet(ModelViewSet):
         return super().destroy(request, *args, **kwargs)
 
     @extend_schema(
-        responses=unite_response_format_schema('get-user-permissions', GetPermissionsTreeWithRoleIdsSerializer))
+        responses=unite_response_format_schema('get-user-permissions', GetPermissionsWithRoleIdsSerializer))
     @action(methods=['get'], detail=False, url_path='get-user-permissions')
     def get_current_user_permissions(self, request, pk=None, version=None):
         """
         获取当前登录用户的权限
         """
-        roles_permissions = []
-        role_ids = [role.id for role in self.request.user.roles.all()]
-        for role_id in role_ids:
-            role_objs = Role.objects.filter(id=role_id).all()
-            if len(role_objs) == 0:
-                raise serializers.ValidationError(f'id为{role_id}的角色不存在.')
-            roles_permissions.extend(role_objs[0].permissions.all())
-        roles_permissions = list(set(roles_permissions))
+        permissions = Permission.objects.filter(
+            id__in=Role.objects.filter(id__in=self.request.user.roles.values_list('id')).values_list(
+                'permissions')).all()
+        # print(permissions.query)
         # 获取权限list
-        permissions_serializer = PermissionBaseRetrieveSerializer(roles_permissions, many=True)
+        permissions_serializer = PermissionBaseRetrieveSerializer(permissions, many=True)
         api_permissions = []
         menu_permissions = []
         for item in permissions_serializer.data:

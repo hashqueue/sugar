@@ -10,7 +10,7 @@ from django_filters import rest_framework as filters
 from utils.drf_utils.custom_json_response import JsonResponse, unite_response_format_schema
 from system.serializers.users import UserRegisterSerializer, MyTokenObtainPairSerializer, UserCreateUpdateSerializer, \
     UserRetrieveSerializer, UserListDestroySerializer, UserResetPasswordSerializer, UserThinRetrieveSerializer, \
-    GetAllUserSerializer
+    GetAllUserSerializer, UserStatisticsSerializer
 from system.models import User
 
 
@@ -198,3 +198,12 @@ class UserViewSet(ModelViewSet):
         """
         serializer = UserThinRetrieveSerializer(self.queryset, many=True, context={'request': request})
         return JsonResponse(data={'results': serializer.data, 'count': len(serializer.data)}, msg='success', code=20000)
+
+    @extend_schema(responses=unite_response_format_schema('get-user-statistics', UserStatisticsSerializer))
+    @action(methods=['get'], detail=False, url_path='statistics')
+    def get_user_statistics(self, request, pk=None, version=None):
+        """
+        获取当前用户拥有的所有数据(聚合统计)信息
+        """
+        serializer = UserStatisticsSerializer(instance=self.request.user, context={'request': request})
+        return JsonResponse(data=serializer.data, msg='success', code=20000)

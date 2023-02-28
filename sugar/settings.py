@@ -133,8 +133,9 @@ WHITE_URL_LIST = [
     # 需要放开的接口权限[allow anyone which is authenticated]
     f'{API_PREFIX}/swagger/', f'{API_PREFIX}/redoc/', f'{API_PREFIX}/schema/', f'{API_PREFIX}/system/user/login/',
     f'{API_PREFIX}/system/user/token/refresh/', f'{API_PREFIX}/system/user/register/',
-    rf'{API_PREFIX}/system/users/profile/', rf'{API_PREFIX}/system/users/reset-password/',
-    rf'{API_PREFIX}/system/permissions/get-user-permissions/', rf'{API_PREFIX}/system/users/update-profile/'
+    f'{API_PREFIX}/system/users/profile/', f'{API_PREFIX}/system/users/reset-password/',
+    f'{API_PREFIX}/system/permissions/get-user-permissions/', f'{API_PREFIX}/system/users/update-profile/',
+    f'{API_PREFIX}/system/users/statistics/'
 ]
 
 AUTHENTICATION_BACKENDS = [

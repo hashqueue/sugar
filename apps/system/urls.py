@@ -19,8 +19,8 @@ router.register(prefix=r'permissions', viewset=PermissionViewSet, basename='perm
 router.register(prefix=r'roles', viewset=RoleViewSet, basename='role')
 router.register(prefix=r'users', viewset=UserViewSet, basename='user')
 urlpatterns = [
-    path('user/login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('user/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('user/register/', UserRegisterView.as_view(), name='user_register'),
+    path('users/login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('users/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('users/register/', UserRegisterView.as_view(), name='user_register'),
     path('', include(router.urls)),
 ]
