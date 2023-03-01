@@ -231,16 +231,17 @@ CELERY_ENABLE_UTC = False
 DJANGO_CELERY_BEAT_TZ_AWARE = False
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 CELERY_TASK_ROUTES = {
-    'device.tasks.check_device_is_alive': {'queue': 'check_device_alive', 'routing_key': 'check_device_alive'},
+    'device.tasks.check_device_status': {'queue': 'check_device_status_queue', 'routing_key': 'device_status'},
 }
 CELERY_TASK_QUEUES = {
     # queue name : { ...configs }
-    'check_device_alive': {'exchange': 'sugar', 'exchange_type': 'direct', 'routing_key': 'check_device_alive'}
+    'check_device_status_queue': {'exchange': 'device_exchange', 'exchange_type': 'direct',
+                                  'routing_key': 'device_status'}
 }
 
 # 异步任务相关配置
-TASK_CHECK_DEVICE_ALIVE_TIME = env('TASK_CHECK_DEVICE_ALIVE_TIME')
-TASK_CHECK_DEVICE_ALIVE_RESULT_TIMEOUT = env('TASK_CHECK_DEVICE_ALIVE_RESULT_TIMEOUT')
+TASK_CHECK_DEVICE_STATUS_TIME = env('TASK_CHECK_DEVICE_STATUS_TIME')
+TASK_CHECK_DEVICE_STATUS_RESULT_TIMEOUT = env('TASK_CHECK_DEVICE_STATUS_RESULT_TIMEOUT')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/

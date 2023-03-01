@@ -128,6 +128,6 @@ class ProjectViewSet(ModelViewSet):
         获取当前项目下的所有成员
         """
         serializer = UserThinRetrieveSerializer(
-            User.objects.filter(id__in=Project.objects.filter(id=pk).values('members').all()).all(), many=True,
+            User.objects.filter(id__in=Project.objects.filter(id=pk).values('members')).all(), many=True,
             context={'request': request})
         return JsonResponse(data={'results': serializer.data, 'count': len(serializer.data)}, msg='success', code=20000)

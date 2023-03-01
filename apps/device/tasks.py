@@ -1,13 +1,14 @@
 import datetime
 import logging
 import json
+import traceback
 
 import paramiko
 from celery import Task as CTask, shared_task
 from django.core.cache import cache
 
 from device.models import Device
-from sugar.settings import TASK_CHECK_DEVICE_ALIVE_RESULT_TIMEOUT
+from sugar.settings import TASK_CHECK_DEVICE_STATUS_RESULT_TIMEOUT
 
 logger = logging.getLogger('my_debug_logger')
 
@@ -30,7 +31,7 @@ class CheckDeviceStatusTask(CTask):
         val = {'task_id': task_id, 'task_status': 'success', 'args': args, 'kwargs': kwargs, 'error': None,
                'task_result': retval, 'complete_time': complete_time}
         cache.set(key=f'{device_id}_{timestamp}', value=json.dumps(val),
-                  timeout=int(TASK_CHECK_DEVICE_ALIVE_RESULT_TIMEOUT))
+                  timeout=int(TASK_CHECK_DEVICE_STATUS_RESULT_TIMEOUT))
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
         """
@@ -49,17 +50,17 @@ class CheckDeviceStatusTask(CTask):
         val = {'task_id': task_id, 'task_status': 'failure', 'args': args, 'kwargs': kwargs, 'error': str(einfo),
                'task_result': None, 'complete_time': complete_time}
         cache.set(key=f'{device_id}_{timestamp}', value=json.dumps(val),
-                  timeout=int(TASK_CHECK_DEVICE_ALIVE_RESULT_TIMEOUT))
+                  timeout=int(TASK_CHECK_DEVICE_STATUS_RESULT_TIMEOUT))
 
 
 @shared_task(base=CheckDeviceStatusTask)
-def check_device_is_alive(host: str, username: str, password: str, port: int, device_id: int) -> dict:
+def check_device_status(host: str, username: str, password: str, port: int, device_id: int) -> dict:
     # 创建SSH客户端对象
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     try:
         # 连接到服务器
-        ssh.connect(hostname=host, username=username, password=password, port=port, timeout=60)
+        ssh.connect(hostname=host, username=username, password=password, port=port, timeout=15)
         # 执行一些简单的命令
         stdin, stdout, stderr = ssh.exec_command('echo "ok"')
         # 检查命令输出
@@ -71,7 +72,7 @@ def check_device_is_alive(host: str, username: str, password: str, port: int, de
             # 将设备状态设置为在线
             if not device.device_status:
                 Device.objects.filter(id=device_id).update(device_status=1, update_time=datetime.datetime.now())
-            return {'result': True, 'msg': f'success, stdout is: {output}'}
+            return {'result': True, 'msg': output.strip()}
         else:
             logger.error(f'Error happen when check device is available: \n{stderr.read().decode("utf-8")}')
             if device.device_status:
@@ -82,4 +83,4 @@ def check_device_is_alive(host: str, username: str, password: str, port: int, de
         device1 = Device.objects.get(id=device_id)
         if device1.device_status:
             Device.objects.filter(id=device_id).update(device_status=0, update_time=datetime.datetime.now())
-        return {'result': False, 'msg': str(e)}
+        return {'result': False, 'msg': f"{str(e)}, traceback:{traceback.format_exc()}"}

@@ -13,7 +13,7 @@ from utils.drf_utils.custom_json_response import JsonResponse, unite_response_fo
 from device.serializers.devices import DeviceCreateUpdateSerializer, DeviceRetrieveSerializer, \
     GetDeviceAliveLogSerializer
 from device.models import Device
-from sugar.settings import TASK_CHECK_DEVICE_ALIVE_TIME
+from sugar.settings import TASK_CHECK_DEVICE_STATUS_TIME
 
 
 class DeviceFilter(filters.FilterSet):
@@ -41,12 +41,12 @@ class DeviceViewSet(ModelViewSet):
         serializer.save(creator=self.request.user.username, modifier=self.request.user.username)
         data = serializer.data
         # 注册设备探活定时任务
-        schedule, created = IntervalSchedule.objects.get_or_create(every=int(TASK_CHECK_DEVICE_ALIVE_TIME),
+        schedule, created = IntervalSchedule.objects.get_or_create(every=int(TASK_CHECK_DEVICE_STATUS_TIME),
                                                                    period=IntervalSchedule.SECONDS, )
         PeriodicTask.objects.create(
             interval=schedule,  # we created this above.
-            name=f'{data.get("id")}_check_device_is_alive',  # simply describes this periodic task.
-            task='device.tasks.check_device_is_alive',  # name of task.
+            name=f'{data.get("id")}_check_device_status',  # simply describes this periodic task.
+            task='device.tasks.check_device_status',  # name of task.
             kwargs=json.dumps({'host': data.get('host'), 'username': data.get('username'),
                                'password': data.get('password'), 'port': data.get('port'),
                                'device_id': data.get('id')})
