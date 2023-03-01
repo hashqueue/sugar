@@ -74,12 +74,12 @@ def check_device_status(host: str, username: str, password: str, port: int, devi
                 Device.objects.filter(id=device_id).update(device_status=1, update_time=datetime.datetime.now())
             return {'result': True, 'msg': output.strip()}
         else:
-            logger.error(f'Error happen when check device is available: \n{stderr.read().decode("utf-8")}')
+            logger.error(f'Error happened when check device is available: \n{stderr.read().decode("utf-8")}')
             if device.device_status:
                 Device.objects.filter(id=device_id).update(device_status=0, update_time=datetime.datetime.now())
             return {'result': False, 'msg': stderr.read().decode('utf-8')}
     except Exception as e:
-        logger.exception(f'Exception happen when check device is available: \n{e}')
+        logger.exception(f'Exception happened when check device is available: \n{e}')
         device1 = Device.objects.get(id=device_id)
         if device1.device_status:
             Device.objects.filter(id=device_id).update(device_status=0, update_time=datetime.datetime.now())
