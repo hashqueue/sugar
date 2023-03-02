@@ -235,8 +235,8 @@ CELERY_TASK_ROUTES = {
 }
 CELERY_TASK_QUEUES = {
     # queue name : { ...configs }
-    'check_device_status_queue': {'exchange': 'device_exchange', 'exchange_type': 'direct',
-                                  'routing_key': 'device_status'}
+    'check_device_status_queue': {'exchange': 'device_exchange', 'exchange_type': 'direct', 'durable': True,
+                                  'auto_delete': False, 'routing_key': 'device_status'}
 }
 
 # 异步任务相关配置
