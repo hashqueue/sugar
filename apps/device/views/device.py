@@ -1,5 +1,7 @@
 import json
+import uuid
 
+from django.core.cache import cache
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
@@ -7,13 +9,15 @@ from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema
 from django_filters import rest_framework as filters
 from django_celery_beat.models import PeriodicTask, IntervalSchedule
-from django.core.cache import cache
 
 from utils.drf_utils.custom_json_response import JsonResponse, unite_response_format_schema
 from device.serializers.devices import DeviceCreateUpdateSerializer, DeviceRetrieveSerializer, \
-    GetDeviceAliveLogSerializer
+    GetDeviceAliveLogSerializer, CreateCollectDevicePerfDataTaskSerializer
 from device.models import Device
-from sugar.settings import TASK_CHECK_DEVICE_STATUS_TIME
+from task.models import TaskResult
+from task.serializers.task_results import TaskResultRetrieveSerializer
+from utils.base.publish_mq_msg import publish_message
+from sugar.settings import TASK_CHECK_DEVICE_STATUS_TIME, env
 
 
 class DeviceFilter(filters.FilterSet):
@@ -36,6 +40,8 @@ class DeviceViewSet(ModelViewSet):
             return DeviceCreateUpdateSerializer
         elif self.action in ['retrieve', 'destroy', 'list']:
             return DeviceRetrieveSerializer
+        elif self.action in ['collect_device_perf_data']:
+            return CreateCollectDevicePerfDataTaskSerializer
 
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user.username, modifier=self.request.user.username)
@@ -140,3 +146,31 @@ class DeviceViewSet(ModelViewSet):
             results.sort(key=lambda x: list(x.keys())[0], reverse=True)
             return JsonResponse({"results": [list(item.values())[0] for item in results]}, msg='success', code=20000)
         return JsonResponse({"results": []}, msg='success', code=20000)
+
+    @extend_schema(
+        responses=unite_response_format_schema('collect-device-perf-data', TaskResultRetrieveSerializer))
+    @action(methods=['post'], detail=True, url_path='collect-device-perf-data')
+    def collect_device_perf_data(self, request, pk=None, version=None):
+        """
+        采集设备某个时间段内的性能数据
+        """
+        serializer = CreateCollectDevicePerfDataTaskSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            task = TaskResult.objects.create(task_status=0, task_type=0, device_id=pk,
+                                             creator=self.request.user.username,
+                                             modifier=self.request.user.username)
+            message = {"task_type": 0,
+                       "metadata": {
+                           "base_url": env("TASK_HTTP_CALLBACK_BASE_URL"), "task_id": str(task.task_id),
+                           "username": env("TASK_HTTP_CALLBACK_USERNAME"),
+                           "password": env("TASK_HTTP_CALLBACK_PASSWORD"),
+                           "task_config": {"intervals": serializer.data.get('intervals'),
+                                           "count": serializer.data.get('count')}
+                       }}
+            publish_message(env('RABBITMQ_USER'), env('RABBITMQ_PASSWORD'), env('RABBITMQ_HOST'),
+                            env('RABBITMQ_PORT'), 'device_exchange', 'device_perf_data',
+                            json.dumps(message, ensure_ascii=False))
+            TaskResult.objects.filter(task_id=task.task_id).update(metadata=message)
+            task_result_serializer = TaskResultRetrieveSerializer(instance=task)
+            return JsonResponse(data=task_result_serializer.data,
+                                msg='采集设备性能数据任务已启动, 请在采集历史中查看数据详情.', code=20000)

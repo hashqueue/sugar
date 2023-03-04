@@ -82,3 +82,8 @@ class DeviceAliveLogSerializer(serializers.Serializer):
 class GetDeviceAliveLogSerializer(serializers.Serializer):
     # 无需定义Meta class，直接继承自Serializer class，适合于自定义接口的返回值格式的场景
     results = DeviceAliveLogSerializer(many=True, help_text='设备探活日志列表')
+
+
+class CreateCollectDevicePerfDataTaskSerializer(serializers.Serializer):
+    intervals = serializers.IntegerField(min_value=5, help_text='间隔时间(秒)')
+    count = serializers.IntegerField(help_text='采集次数')

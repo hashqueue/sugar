@@ -8,7 +8,7 @@ from pika import DeliveryMode
 logger = logging.getLogger('my_debug_logger')
 
 """
-如何在Django视图中使用
+### How to use in Django views.py
 from utils.base.publish_mq_msg import publish_message
 from sugar.settings import env
 
@@ -48,3 +48,4 @@ def publish_message(mq_user: str, mq_pwd: str, mq_host: str, mq_port: int, excha
         connection.close()
     except Exception as e:
         logger.error(f'Exception happened when publish message: {e}, detail: {traceback.format_exc()}')
+        raise Exception(e)

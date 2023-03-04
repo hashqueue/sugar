@@ -87,8 +87,8 @@ class User(AbstractUser):
     gender = models.CharField(max_length=10, blank=True, default="male", choices=gender_choices, verbose_name="性别",
                               help_text='性别')
     mobile = models.CharField(max_length=11, blank=True, default='', verbose_name="手机号码", help_text='手机号码')
-    avatar = models.ImageField(upload_to="avatars/", default=f"avatars/{random.choice(['brave.png', 'ninja.png'])}",
-                               max_length=100, blank=True, verbose_name="头像", help_text='头像')
+    avatar = models.ImageField(upload_to="avatars/", default=f"avatars/brave.png", max_length=100, blank=True,
+                               verbose_name="头像", help_text='头像')
     department = models.ForeignKey(Organization, null=True, blank=True, on_delete=models.SET_NULL, verbose_name="部门",
                                    help_text='部门')
     position = models.CharField(max_length=64, blank=True, default='', verbose_name="职位", help_text='职位')
