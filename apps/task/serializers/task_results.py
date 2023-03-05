@@ -20,7 +20,7 @@ class TaskResultRetrieveSerializer(BaseModelSerializer):
 
     class Meta:
         model = TaskResult
-        exclude = ('metadata', 'worker_name')
+        exclude = ('metadata',)
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_creator_name(self, obj: TaskResult):

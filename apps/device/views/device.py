@@ -1,9 +1,8 @@
 import json
-import uuid
 
 from django.core.cache import cache
 from django.shortcuts import get_object_or_404
-from rest_framework import status
+from rest_framework import status, serializers
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema
@@ -18,6 +17,7 @@ from task.models import TaskResult
 from task.serializers.task_results import TaskResultRetrieveSerializer
 from utils.base.publish_mq_msg import publish_message
 from sugar.settings import TASK_CHECK_DEVICE_STATUS_TIME, env
+from device.tasks import deploy_agent_to_device
 
 
 class DeviceFilter(filters.FilterSet):
@@ -149,13 +149,16 @@ class DeviceViewSet(ModelViewSet):
 
     @extend_schema(
         responses=unite_response_format_schema('collect-device-perf-data', TaskResultRetrieveSerializer))
-    @action(methods=['post'], detail=True, url_path='collect-device-perf-data')
+    @action(methods=['post'], detail=True, url_path='collect-perf-data')
     def collect_device_perf_data(self, request, pk=None, version=None):
         """
         采集设备某个时间段内的性能数据
         """
-        serializer = CreateCollectDevicePerfDataTaskSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
+        create_task_serializer = CreateCollectDevicePerfDataTaskSerializer(data=request.data)
+        device_status = Device.objects.filter(pk=pk).values_list('device_status', flat=True).first()
+        if create_task_serializer.is_valid(raise_exception=True):
+            if device_status == 0:
+                raise serializers.ValidationError('设备离线，无法采集性能数据', code=40000)
             task = TaskResult.objects.create(task_status=0, task_type=0, device_id=pk,
                                              creator=self.request.user.username,
                                              modifier=self.request.user.username)
@@ -164,13 +167,46 @@ class DeviceViewSet(ModelViewSet):
                            "base_url": env("TASK_HTTP_CALLBACK_BASE_URL"), "task_id": str(task.task_id),
                            "username": env("TASK_HTTP_CALLBACK_USERNAME"),
                            "password": env("TASK_HTTP_CALLBACK_PASSWORD"),
-                           "task_config": {"intervals": serializer.data.get('intervals'),
-                                           "count": serializer.data.get('count')}
+                           "task_config": {"intervals": create_task_serializer.data.get('intervals'),
+                                           "count": create_task_serializer.data.get('count')}
                        }}
-            publish_message(env('RABBITMQ_USER'), env('RABBITMQ_PASSWORD'), env('RABBITMQ_HOST'),
-                            env('RABBITMQ_PORT'), 'device_exchange', 'device_perf_data',
-                            json.dumps(message, ensure_ascii=False))
+            try:
+                publish_message(env('RABBITMQ_USER'), env('RABBITMQ_PASSWORD'), env('RABBITMQ_HOST'),
+                                env('RABBITMQ_PORT'), 'device_exchange', 'device_perf_data',
+                                json.dumps(message, ensure_ascii=False))
+            except Exception as e:
+                raise serializers.ValidationError(f'发送消息到消息队列失败, {e}', code=40000)
             TaskResult.objects.filter(task_id=task.task_id).update(metadata=message)
             task_result_serializer = TaskResultRetrieveSerializer(instance=task)
             return JsonResponse(data=task_result_serializer.data,
                                 msg='采集设备性能数据任务已启动, 请在采集历史中查看数据详情.', code=20000)
+
+    @extend_schema(
+        responses=unite_response_format_schema('deploy-agent-to-device', TaskResultRetrieveSerializer))
+    @action(methods=['get'], detail=True, url_path='deploy-agent')
+    def deploy_agent_to_device(self, request, pk=None, version=None):
+        """
+        部署agent到目标服务器中并启动agent
+        """
+        device_status = Device.objects.filter(pk=pk).values_list('device_status', flat=True).first()
+        if device_status == 0:
+            raise serializers.ValidationError('设备离线，无法部署agent', code=40000)
+        task = TaskResult.objects.create(task_status=0, task_type=1, device_id=pk,
+                                         creator=self.request.user.username,
+                                         modifier=self.request.user.username)
+        message = {"task_type": 1,
+                   "metadata": {
+                       "base_url": env("TASK_HTTP_CALLBACK_BASE_URL"), "task_id": str(task.task_id),
+                       "username": env("TASK_HTTP_CALLBACK_USERNAME"),
+                       "password": env("TASK_HTTP_CALLBACK_PASSWORD"),
+                       "task_config": Device.objects.filter(pk=pk).values('username', 'password', 'host',
+                                                                          'port').first()
+                   }}
+        TaskResult.objects.filter(task_id=task.task_id).update(metadata=message)
+        config = message['metadata']['task_config']
+        # start deploy agent to device
+        deploy_agent_to_device.delay(host=config['host'], username=config['username'], password=config['password'],
+                                     port=config['port'], task_id=str(task.task_id))
+        task_result_serializer = TaskResultRetrieveSerializer(instance=task)
+        return JsonResponse(data=task_result_serializer.data,
+                            msg='已开始向设备中部署agent, 请在日志中查看部署进度.', code=20000)

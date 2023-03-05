@@ -233,11 +233,15 @@ DJANGO_CELERY_BEAT_TZ_AWARE = False
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 CELERY_TASK_ROUTES = {
     'device.tasks.check_device_status': {'queue': 'check_device_status_queue', 'routing_key': 'device_status'},
+    'device.tasks.deploy_agent_to_device': {'queue': 'deploy_agent_to_device_queue',
+                                            'routing_key': 'deploy_agent'},
 }
 CELERY_TASK_QUEUES = {
     # queue name : { ...configs }
     'check_device_status_queue': {'exchange': 'device_exchange', 'exchange_type': 'direct', 'durable': True,
-                                  'auto_delete': False, 'routing_key': 'device_status'}
+                                  'auto_delete': False, 'routing_key': 'device_status'},
+    'deploy_agent_to_device_queue': {'exchange': 'device_exchange', 'exchange_type': 'direct', 'durable': True,
+                                     'auto_delete': False, 'routing_key': 'deploy_agent'}
 }
 
 # 异步任务相关配置
