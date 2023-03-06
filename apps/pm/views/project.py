@@ -65,8 +65,6 @@ class ProjectViewSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
         """
         create project
-
-        @`project_status` = [(0, '未开始'), (1, '进行中'), (2, '已完成')]
         """
         res = super().create(request, *args, **kwargs)
         return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_201_CREATED,

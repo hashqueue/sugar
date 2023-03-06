@@ -84,11 +84,6 @@ class DeviceViewSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
         """
         create device
-
-        @`device_status` = [(0, '离线'), (1, '在线')]
-
-
-        @`device_type` = [(0, '阿里云ECS'), (1, '腾讯云ECS'), (2, 'Raspberry Pi(树莓派)')]
         """
         res = super().create(request, *args, **kwargs)
         return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_201_CREATED,
@@ -164,7 +159,7 @@ class DeviceViewSet(ModelViewSet):
                                              modifier=self.request.user.username)
             message = {"task_type": 0,
                        "metadata": {
-                           "base_url": env("TASK_HTTP_CALLBACK_BASE_URL"), "task_id": str(task.task_id),
+                           "base_url": env("TASK_HTTP_CALLBACK_BASE_URL"), "task_uuid": str(task.task_uuid),
                            "username": env("TASK_HTTP_CALLBACK_USERNAME"),
                            "password": env("TASK_HTTP_CALLBACK_PASSWORD"),
                            "task_config": {"intervals": create_task_serializer.data.get('intervals'),
@@ -176,7 +171,7 @@ class DeviceViewSet(ModelViewSet):
                                 json.dumps(message, ensure_ascii=False))
             except Exception as e:
                 raise serializers.ValidationError(f'发送消息到消息队列失败, {e}', code=40000)
-            TaskResult.objects.filter(task_id=task.task_id).update(metadata=message)
+            TaskResult.objects.filter(task_uuid=task.task_uuid).update(metadata=message)
             task_result_serializer = TaskResultRetrieveSerializer(instance=task)
             return JsonResponse(data=task_result_serializer.data,
                                 msg='采集设备性能数据任务已启动, 请在采集历史中查看数据详情.', code=20000)
@@ -196,17 +191,17 @@ class DeviceViewSet(ModelViewSet):
                                          modifier=self.request.user.username)
         message = {"task_type": 1,
                    "metadata": {
-                       "base_url": env("TASK_HTTP_CALLBACK_BASE_URL"), "task_id": str(task.task_id),
+                       "base_url": env("TASK_HTTP_CALLBACK_BASE_URL"), "task_uuid": str(task.task_uuid),
                        "username": env("TASK_HTTP_CALLBACK_USERNAME"),
                        "password": env("TASK_HTTP_CALLBACK_PASSWORD"),
                        "task_config": Device.objects.filter(pk=pk).values('username', 'password', 'host',
                                                                           'port').first()
                    }}
-        TaskResult.objects.filter(task_id=task.task_id).update(metadata=message)
+        TaskResult.objects.filter(task_uuid=task.task_uuid).update(metadata=message)
         config = message['metadata']['task_config']
         # start deploy agent to device
         deploy_agent_to_device.delay(host=config['host'], username=config['username'], password=config['password'],
-                                     port=config['port'], task_id=str(task.task_id))
+                                     port=config['port'], task_uuid=str(task.task_uuid))
         task_result_serializer = TaskResultRetrieveSerializer(instance=task)
         return JsonResponse(data=task_result_serializer.data,
                             msg='已开始向设备中部署agent, 请在日志中查看部署进度.', code=20000)

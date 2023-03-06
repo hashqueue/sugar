@@ -37,11 +37,6 @@ class TaskResultViewSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
         """
         create task-result
-
-        @`task_status` = [
-            (0, 'PENDING'), (1, 'RECEIVED'), (2, 'STARTED'), (3, 'SUCCESS'), (4, 'FAILURE'), (5, 'REVOKED'),
-            (6, 'RETRY'), (7, 'IGNORED'), (8, 'Queued')
-        ]
         """
         res = super().create(request, *args, **kwargs)
         return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_201_CREATED,
