@@ -103,6 +103,7 @@ class DeployAgentToDeviceTask(CTask):
 
 @shared_task(base=DeployAgentToDeviceTask)
 def deploy_agent_to_device(host: str, username: str, password: str, port: int, task_uuid: str) -> dict:
+    time.sleep(5)  # 为了前端可以实时展示部署日志，这里睡眠5s
     # 创建SSH客户端对象
     ssh = paramiko.SSHClient()
     # 允许连接不在know_hosts文件中的主机

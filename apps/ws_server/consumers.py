@@ -1,6 +1,8 @@
 import psutil
 from channels.generic.websocket import JsonWebsocketConsumer
 
+from task.models import TaskResult
+
 
 class ServerPerformanceConsumer(JsonWebsocketConsumer):
 
@@ -33,3 +35,7 @@ class ServerPerformanceConsumer(JsonWebsocketConsumer):
                 }
             }
             self.send_json({"data": server_data})
+        elif content.get('action') == 'get-deploy-agent-log':
+            task_uuid = content.get('task_uuid')
+            log_data = TaskResult.objects.filter(task_uuid=task_uuid).values('result', 'log').first()
+            self.send_json({"data": log_data})
