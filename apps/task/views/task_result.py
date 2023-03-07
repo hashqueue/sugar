@@ -9,11 +9,19 @@ from task.models import TaskResult
 
 
 class TaskResultFilter(filters.FilterSet):
+    task_uuid = filters.CharFilter(field_name='task_uuid', lookup_expr='icontains', label='taskID(模糊搜索且不区分大小写)')
     device_id = filters.NumberFilter(field_name='device', label='所属设备ID')
+    result = filters.NumberFilter(field_name='result', label='任务执行结果成功(1)或失败(0)', method='filter_result')
+
+    def filter_result(self, queryset, name, value):
+        if value:
+            return queryset.filter(result__isnull=False, result__status=True)
+        else:
+            return queryset.filter(result__isnull=False, result__status=False)
 
     class Meta:
         model = TaskResult
-        fields = ['device_id', 'task_status']
+        fields = ['task_uuid', 'device_id', 'task_status', 'task_type', 'result']
 
 
 @extend_schema(tags=['任务执行结果管理'])

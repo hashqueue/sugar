@@ -10,7 +10,7 @@ from rest_framework import routers
 from task.views.task_result import TaskResultViewSet
 
 router = routers.DefaultRouter()
-router.register(prefix=r'tasks', viewset=TaskResultViewSet, basename='task')
+router.register(prefix=r'tasks-results', viewset=TaskResultViewSet, basename='task')
 urlpatterns = [
     path('', include(router.urls)),
 ]

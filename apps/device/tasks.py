@@ -22,7 +22,7 @@ class CheckDeviceStatusTask(CTask):
     def on_success(self, retval, task_id, args, kwargs):
         """
 
-        @param retval: 任务函数返回的结果 e.g. {'result': True, 'msg': 'success, stdout is: ok\n'}
+        @param retval: 任务函数返回的结果 e.g. {'result': True, 'msg': 'success, stdout is: ok\n', 'data': None}
         @param task_id: Celery生成的task_id: e2b0f61e-e25e-4d97-9881-41e9034b2007, 非数据库中task_result表的task_uuid !!!
         @param args: ['a', 1]
         @param kwargs: {'host': '192.168.124.16', 'username': 'ubuntu'}
@@ -91,13 +91,15 @@ def check_device_status(host: str, username: str, password: str, port: int, devi
 class DeployAgentToDeviceTask(CTask):
     def on_success(self, retval, task_id, args, kwargs):
         TaskResult.objects.filter(task_uuid=kwargs.get('task_uuid')).update(task_status=3,
-                                                                            result={'data': retval,
-                                                                                    'desc': retval.get('msg')})
+                                                                            result={'status': retval.get('result'),
+                                                                                    'data': retval.get('data'),
+                                                                                    'msg': retval.get('msg')})
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
         TaskResult.objects.filter(task_uuid=kwargs.get('task_uuid')).update(task_status=4,
-                                                                            result={'data': str(einfo),
-                                                                                    'desc': 'not ok'},
+                                                                            result={'status': False,
+                                                                                    'data': str(einfo),
+                                                                                    'msg': 'not ok'},
                                                                             traceback=str(einfo))
 
 

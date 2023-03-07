@@ -16,7 +16,7 @@ class TaskResultCreateUpdateSerializer(BaseModelSerializer):
 
 class TaskResultRetrieveSerializer(BaseModelSerializer):
     creator_name = serializers.SerializerMethodField(help_text='创建人姓名')
-    time_duration = serializers.SerializerMethodField(help_text='任务执行时长')
+    time_duration = serializers.SerializerMethodField(help_text='任务耗时')
 
     class Meta:
         model = TaskResult
