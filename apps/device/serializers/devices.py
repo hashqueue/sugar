@@ -85,5 +85,5 @@ class GetDeviceAliveLogSerializer(serializers.Serializer):
 
 
 class CreateCollectDevicePerfDataTaskSerializer(serializers.Serializer):
-    intervals = serializers.IntegerField(min_value=5, help_text='间隔时间(秒)')
-    count = serializers.IntegerField(help_text='采集次数')
+    intervals = serializers.IntegerField(min_value=1, help_text='间隔时间(秒)')
+    count = serializers.IntegerField(min_value=1, help_text='采集次数')
