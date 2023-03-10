@@ -23,7 +23,7 @@ python3 manage.py migrate
 # 导入初始化数据
 python3 manage.py loaddata init_db.json
 # 启动项目
-python3 manage.py runserver
+python3 manage.py runserver 0.0.0.0:8000
 # 前端开发环境搭建见前端仓库 https://github.com/hashqueue/sugar-web.git
 #####################################################
 ###                     celery                    ###

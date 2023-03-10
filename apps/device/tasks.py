@@ -16,6 +16,29 @@ from utils.base.common import get_current_time, exec_cmd, update_task_log
 
 logger = logging.getLogger('my_debug_logger')
 
+cmd = """
+#!/bin/sh
+set -e
+ARCH=$(uname -m)
+if [ "$ARCH" = "x86_64" ]; then
+    if ps ax | grep -v grep | grep sugar-agent_amd64 > /dev/null
+    then
+        echo 1
+    else
+        echo 0
+    fi
+elif [ "$ARCH" = "aarch64" ]; then
+    if ps ax | grep -v grep | grep sugar-agent_arm64 > /dev/null
+    then
+        echo 1
+    else
+        echo 0
+    fi
+else
+    echo 2
+fi
+"""
+
 
 class CheckDeviceStatusTask(CTask):
 
@@ -67,6 +90,7 @@ def check_device_status(host: str, username: str, password: str, port: int, devi
         ssh.connect(hostname=host, username=username, password=password, port=port, timeout=10)
         # 执行一些简单的命令
         stdout, stderr = exec_cmd(ssh_client=ssh, cmd='echo "ok"')
+        is_deployed_agent_stdout, is_deployed_agent_stderr = exec_cmd(ssh_client=ssh, cmd=f"sh -c '{cmd}'")
         # 关闭连接
         ssh.close()
         device = Device.objects.get(id=device_id)
@@ -74,17 +98,31 @@ def check_device_status(host: str, username: str, password: str, port: int, devi
             # 将设备状态设置为在线
             if not device.device_status:
                 Device.objects.filter(id=device_id).update(device_status=1, update_time=datetime.datetime.now())
+            if is_deployed_agent_stdout == '1':  # agent运行中
+                if not device.is_deployed_agent:
+                    Device.objects.filter(id=device_id).update(is_deployed_agent=True,
+                                                               update_time=datetime.datetime.now())
+            elif is_deployed_agent_stdout == '0':  # agent未运行
+                if device.is_deployed_agent:
+                    Device.objects.filter(id=device_id).update(is_deployed_agent=False,
+                                                               update_time=datetime.datetime.now())
+            if is_deployed_agent_stderr:  # 未查询到agent状态
+                if device.is_deployed_agent:
+                    Device.objects.filter(id=device_id).update(is_deployed_agent=False,
+                                                               update_time=datetime.datetime.now())
             return {'result': True, 'data': None, 'msg': stdout}
         else:
             logger.error(f'Error happened when check device is available: \n{stderr}')
             if device.device_status:
-                Device.objects.filter(id=device_id).update(device_status=0, update_time=datetime.datetime.now())
+                Device.objects.filter(id=device_id).update(device_status=0, is_deployed_agent=False,
+                                                           update_time=datetime.datetime.now())
             return {'result': False, 'data': None, 'msg': stderr}
     except Exception as e:
         logger.exception(f'Exception happened when check device is available: \n{e}')
         device1 = Device.objects.get(id=device_id)
         if device1.device_status:
-            Device.objects.filter(id=device_id).update(device_status=0, update_time=datetime.datetime.now())
+            Device.objects.filter(id=device_id).update(device_status=0, is_deployed_agent=False,
+                                                       update_time=datetime.datetime.now())
         return {'result': False, 'data': None, 'msg': f"{str(e)}, traceback:{traceback.format_exc()}"}
 
 
@@ -104,7 +142,7 @@ class DeployAgentToDeviceTask(CTask):
 
 
 @shared_task(base=DeployAgentToDeviceTask)
-def deploy_agent_to_device(host: str, username: str, password: str, port: int, task_uuid: str) -> dict:
+def deploy_agent_to_device(host: str, username: str, password: str, port: int, task_uuid: str, device_id: int) -> dict:
     time.sleep(5)  # 为了前端可以实时展示部署日志，这里睡眠5s
     # 创建SSH客户端对象
     ssh = paramiko.SSHClient()
@@ -116,7 +154,7 @@ def deploy_agent_to_device(host: str, username: str, password: str, port: int, t
         TaskResult.objects.filter(task_uuid=task_uuid).update(log=f'{get_current_time()} -> 连接服务器成功\n')
 
         # 获取内核架构成功
-        stdout, stderr = exec_cmd(ssh_client=ssh, cmd='arch')
+        stdout, stderr = exec_cmd(ssh_client=ssh, cmd='uname -m')
         if stdout != '' and stderr == '':
             logger.info(f'Get kernelArch output: {stdout}')
             update_task_log(task_uuid, f'获取内核架构成功: kernelArch={stdout}')
@@ -174,10 +212,9 @@ def deploy_agent_to_device(host: str, username: str, password: str, port: int, t
                                                       f'{sugar_agent_file_name} && ./{sugar_agent_file_name} '
                                                       f'-user {env("RABBITMQ_USER")} -password '
                                                       f'{env("RABBITMQ_PASSWORD")} -host {env("RABBITMQ_HOST")} -port '
-                                                      f'{env("RABBITMQ_PORT")} -exchange-name device_exchange '
-                                                      f'-queue-name collect_device_perf_data_queue -routing-key '
-                                                      f'device_perf_data" > {home_file_path}/sugar-agent/agent.log'
-                                                      f' 2>&1 &')
+                                                      f'{env("RABBITMQ_PORT")} -exchange-name task_exchange '
+                                                      f'-device-id {device_id}" > {home_file_path}/'
+                                                      f'sugar-agent/agent.log 2>&1 &')
         if stderr == '':
             time.sleep(5)
             stdout, stderr = exec_cmd(ssh_client=ssh, cmd=f'cat {home_file_path}/sugar-agent/agent.log')
