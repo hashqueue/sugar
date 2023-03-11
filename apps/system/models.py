@@ -16,7 +16,7 @@ class Permission(BaseModel):
         ('PATCH', '局部改'),
         ('GET', '查')
     )
-    title = models.CharField(max_length=64, unique=True, verbose_name="权限名称", help_text='权限名称')
+    title = models.CharField(max_length=64, unique=True, verbose_name="权限名称", help_text='权限名称', db_index=True)
     parent = models.ForeignKey(to='self', null=True, blank=True, on_delete=models.SET_NULL, verbose_name="父权限",
                                help_text='父权限')
     is_menu = models.BooleanField(verbose_name='是否为菜单(true为菜单,false为接口)',
@@ -65,7 +65,7 @@ class Organization(BaseModel):
     组织架构
     """
     type_choices = (("company", "公司"), ("department", "部门"))
-    name = models.CharField(max_length=128, verbose_name="名称", help_text='名称')
+    name = models.CharField(max_length=128, verbose_name="名称", help_text='名称', db_index=True)
     type = models.CharField(max_length=20, choices=type_choices, default="department", verbose_name="类型",
                             help_text='类型')
     parent = models.ForeignKey("self", null=True, blank=True, on_delete=models.SET_NULL, verbose_name="父组织架构",

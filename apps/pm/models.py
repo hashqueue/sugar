@@ -8,12 +8,11 @@ class Project(BaseModel):
     项目
     """
     PROJECT_STATUS_CHOICES = [(0, '未开始'), (1, '进行中'), (2, '已完成')]
-    name = models.CharField(max_length=64, verbose_name="项目名称", help_text='项目名称')
+    name = models.CharField(max_length=64, verbose_name="项目名称", help_text='项目名称', db_index=True)
     members = models.ManyToManyField(User, blank=True, verbose_name="项目成员", help_text='项目成员')
-    owner = models.CharField(max_length=150, verbose_name='负责人', help_text='负责人')
+    owner = models.CharField(max_length=150, verbose_name='负责人', help_text='负责人', db_index=True)
     project_status = models.PositiveSmallIntegerField(choices=PROJECT_STATUS_CHOICES, default=0,
-                                                      verbose_name='项目状态',
-                                                      help_text='项目状态')
+                                                      verbose_name='项目状态', help_text='项目状态', db_index=True)
 
     class Meta:
         db_table = 'pm_project'
@@ -29,14 +28,14 @@ class Sprint(BaseModel):
     迭代
     """
     SPRINT_STATUS_CHOICES = [(0, '未开始'), (1, '进行中'), (2, '已完成')]
-    name = models.CharField(max_length=64, verbose_name="迭代名称", help_text='迭代名称')
+    name = models.CharField(max_length=64, verbose_name="迭代名称", help_text='迭代名称', db_index=True)
     project = models.ForeignKey(Project, null=True, blank=True, on_delete=models.SET_NULL, verbose_name="所属项目",
                                 help_text='所属项目')
-    owner = models.CharField(max_length=150, verbose_name='负责人', help_text='负责人')
+    owner = models.CharField(max_length=150, verbose_name='负责人', help_text='负责人', db_index=True)
     start_time = models.DateTimeField(null=True, blank=True, verbose_name="开始时间", help_text='开始时间')
     finish_time = models.DateTimeField(null=True, blank=True, verbose_name="完成时间", help_text='完成时间')
     sprint_status = models.PositiveSmallIntegerField(choices=SPRINT_STATUS_CHOICES, default=0, verbose_name='迭代状态',
-                                                     help_text='迭代状态')
+                                                     help_text='迭代状态', db_index=True)
 
     class Meta:
         db_table = 'pm_sprint'
@@ -66,23 +65,22 @@ class WorkItem(BaseModel):
         (0, '未开始'), (1, '待处理'), (2, '重新打开'), (3, '进行中'), (4, '实现中'), (5, '已完成'), (6, '修复中'),
         (7, '已实现'), (8, '关闭'), (9, '已修复'), (10, '已验证'), (11, '已拒绝')
     ]
-    name = models.CharField(max_length=64, verbose_name="工作项名称", help_text='工作项名称')
-    owner = models.CharField(max_length=150, verbose_name='负责人', help_text='负责人')
+    name = models.CharField(max_length=64, verbose_name="工作项名称", help_text='工作项名称', db_index=True)
+    owner = models.CharField(max_length=150, verbose_name='负责人', help_text='负责人', db_index=True)
     work_item_type = models.PositiveSmallIntegerField(choices=WORK_ITEM_TYPE_CHOICES, verbose_name='工作项类型',
-                                                      help_text='工作项类型')
-    priority = models.PositiveSmallIntegerField(choices=PRIORITY_CHOICES, verbose_name='优先级', help_text='优先级')
-
+                                                      help_text='工作项类型', db_index=True)
+    priority = models.PositiveSmallIntegerField(choices=PRIORITY_CHOICES, verbose_name='优先级', help_text='优先级',
+                                                db_index=True)
     sprint = models.ForeignKey(Sprint, null=True, blank=True, on_delete=models.SET_NULL, verbose_name="所属迭代",
                                help_text='所属迭代')
     work_item_status = models.PositiveSmallIntegerField(choices=WORK_ITEM_STATUS_CHOICES, default=0,
-                                                        verbose_name='状态',
-                                                        help_text='状态')
+                                                        verbose_name='状态', help_text='状态', db_index=True)
     severity = models.PositiveSmallIntegerField(null=True, blank=True, choices=SEVERITY_CHOICES,
-                                                verbose_name='缺陷严重程度', help_text='缺陷严重程度')
+                                                verbose_name='缺陷严重程度', help_text='缺陷严重程度', db_index=True)
     bug_type = models.PositiveSmallIntegerField(choices=BUG_TYPE_CHOICES, null=True, blank=True,
-                                                verbose_name='缺陷类型', help_text='缺陷类型')
+                                                verbose_name='缺陷类型', help_text='缺陷类型', db_index=True)
     process_result = models.PositiveSmallIntegerField(choices=PROCESS_RESULT_CHOICES, null=True, blank=True,
-                                                      verbose_name='缺陷处理结果', help_text='缺陷处理结果')
+                                                      verbose_name='缺陷处理结果', help_text='缺陷处理结果', db_index=True)
     desc = models.TextField(blank=True, default='', verbose_name='描述', help_text='描述')
     deadline = models.DateTimeField(null=True, blank=True, verbose_name="截止日期", help_text='截止日期')
     followers = models.ManyToManyField(User, blank=True, verbose_name="关注人", help_text='关注人')

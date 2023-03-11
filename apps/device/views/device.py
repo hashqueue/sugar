@@ -18,6 +18,7 @@ from task.serializers.task_results import TaskResultRetrieveSerializer
 from utils.base.publish_mq_msg import publish_message
 from sugar.settings import TASK_CHECK_DEVICE_STATUS_TIME, env
 from device.tasks import deploy_agent_to_device
+from utils.base.secret import Secret
 
 
 class DeviceFilter(filters.FilterSet):
@@ -49,12 +50,14 @@ class DeviceViewSet(ModelViewSet):
         # 注册设备探活定时任务
         schedule, created = IntervalSchedule.objects.get_or_create(every=int(TASK_CHECK_DEVICE_STATUS_TIME),
                                                                    period=IntervalSchedule.SECONDS, )
+        # 对设备密码进行解密
+        secret = Secret(env("BASE_DEVICE_PASSWORD_SECRET_KEY"))
         PeriodicTask.objects.create(
             interval=schedule,  # we created this above.
             name=f'{data.get("id")}_check_device_status',  # simply describes this periodic task.
             task='device.tasks.check_device_status',  # name of task.
             kwargs=json.dumps({'host': data.get('host'), 'username': data.get('username'),
-                               'password': data.get('password'), 'port': data.get('port'),
+                               'password': secret.decrypt(data.get('password')), 'port': data.get('port'),
                                'device_id': data.get('id')})
         )
 
@@ -64,11 +67,13 @@ class DeviceViewSet(ModelViewSet):
         # 更新设备探活定时任务参数
         task = PeriodicTask.objects.filter(name__startswith=str(data.get("id"))).first()
         if task:
+            # 对设备密码进行解密
+            secret = Secret(env("BASE_DEVICE_PASSWORD_SECRET_KEY"))
             task.kwargs = json.dumps({'host': data.get('host'), 'username': data.get('username'),
-                                      'password': data.get('password'), 'port': data.get('port'),
+                                      'password': secret.decrypt(data.get('password')), 'port': data.get('port'),
                                       'device_id': data.get('id')})
             task.last_run_at = None
-            task.save()
+            task.save(update_fields=['kwargs', 'last_run_at'])
 
     def perform_destroy(self, instance):
         # 删除设备探活定时任务
@@ -76,7 +81,7 @@ class DeviceViewSet(ModelViewSet):
         if task:
             task.enabled = False
             task.last_run_at = None
-            task.save()
+            task.save(update_fields=['enabled', 'last_run_at'])
             task.delete()
         instance.delete()
 
@@ -203,8 +208,11 @@ class DeviceViewSet(ModelViewSet):
         TaskResult.objects.filter(task_uuid=task.task_uuid).update(metadata=message)
         config = message['metadata']['task_config']
         # start deploy agent to device
-        deploy_agent_to_device.delay(host=config['host'], username=config['username'], password=config['password'],
-                                     port=config['port'], task_uuid=str(task.task_uuid), device_id=pk)
+        # 对设备密码进行解密
+        secret = Secret(env("BASE_DEVICE_PASSWORD_SECRET_KEY"))
+        deploy_agent_to_device.delay(host=config['host'], username=config['username'],
+                                     password=secret.decrypt(config['password']), port=config['port'],
+                                     task_uuid=str(task.task_uuid), device_id=pk)
         task_result_serializer = TaskResultRetrieveSerializer(instance=task)
         return JsonResponse(data=task_result_serializer.data,
                             msg='已开始向设备中部署agent, 请在日志中查看部署进度.', code=20000)

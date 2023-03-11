@@ -13,9 +13,9 @@ class TaskResult(BaseModel):
     task_uuid = models.UUIDField(unique=True, primary_key=True, default=uuid.uuid4, editable=False, db_index=True,
                                  verbose_name='任务ID', help_text='任务ID')
     task_status = models.PositiveSmallIntegerField(choices=TASK_STATE_CHOICES, default=0, verbose_name='任务状态',
-                                                   help_text='任务状态')
+                                                   help_text='任务状态', db_index=True)
     task_type = models.PositiveSmallIntegerField(choices=TASK_TYPE_CHOICES, default=0, verbose_name='任务类型',
-                                                 help_text='任务类型')
+                                                 help_text='任务类型', db_index=True)
     log = models.TextField(blank=True, default='', verbose_name='任务执行的log', help_text='任务执行的log')
     result = models.JSONField(null=True, default=None, verbose_name='任务执行结果', help_text='任务执行结果')
     traceback = models.TextField(blank=True, default='', verbose_name='Task Traceback',
