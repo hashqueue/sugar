@@ -7,6 +7,7 @@ __pycache__/
 .idea
 aaa.py
 aaa.sh
+a.conf
 static/media/user_upload_files
 
 # C extensions

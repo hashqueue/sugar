@@ -1,8 +1,6 @@
-# Sugar - 集项目管理和测试管理于一体的一站式研发管理平台
+# Sugar - 一站式项目研发管理平台
 
 权限控制基于RBAC，精确到菜单和按钮级别权限控制。
-
-TODO
 
 ## 本地开发环境搭建
 ```shell
@@ -33,19 +31,24 @@ python3 manage.py runserver 0.0.0.0:8000
 # 5672：RabbitMQ 的 AMQP 端口，用于客户端与 RabbitMQ 之间的通信。
 # 1883：MQTT 协议的默认端口，RabbitMQ 也支持 MQTT 协议，并且可以通过该端口接收来自 MQTT 客户端的消息。
 docker run -d --name ramq -p 5672:5672 -p 15672:15672 -p 1883:1883 -v /home/hashqueue/rabbitmq:/var/lib/rabbitmq rabbitmq:3.11-management-alpine
-# 启动celery worker
-celery -A sugar worker -l info --logfile=./logs/celery_worker.log
-# 启动celery beat
-celery -A sugar beat -l info --logfile=./logs/celery_beat.log
+# 本地启动celery worker
+celery -A sugar worker -l info
+# 本地启动celery beat
+celery -A sugar beat -l info
 # 检查celery配置项是否正确，会直接修改settings.py文件
 celery upgrade settings ./sugar/settings.py --django
 #####################################################
 ###                     redis                     ###
 #####################################################
+# 本地启动一个Redis容器做测试用，持久化数据到本地/home/hashqueue/redisdata
 docker run --name redis -d -p 6381:6379 -v /home/hashqueue/redisdata:/data redis:latest redis-server --save 180 1 --loglevel warning
 #####################################################
 ###               Done!下边的命令了解即可            ###
 #####################################################
+# 生产环境下使用supervisor启动celery
+ENV_PATH=./.env.prod supervisord -c celery_app.conf
+# 进入supervisor控制台，支持很多命令行操作
+ENV_PATH=./.env.prod supervisorctl -c celery_app.conf
 # 生产环境使用开发服务器启动时手动指定读取哪个env文件(项目根目录下的.env.prod)
 ENV_PATH=./.env.prod python3 manage.py runserver
 # Django导出数据库数据

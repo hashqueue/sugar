@@ -9,9 +9,34 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
     volumes:
-      - /var/lib/mysql_8:/var/lib/mysql
+      - /var/lib/mysql_8_c:/var/lib/mysql
     ports:
-      - "3316:3306"
+      - "3308:3306"
+    restart: always
+    tty: true
+    stdin_open: true
+
+  mq:
+    image: rabbitmq:3.11-management-alpine
+    container_name: mq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    volumes:
+      - /var/lib/rabbitmq_3.11_c:/var/lib/rabbitmq
+    ports:
+      - "5674:5672"
+    restart: always
+    tty: true
+    stdin_open: true
+
+  cache:
+    image: redis:7.0.8-alpine
+    container_name: cache
+    volumes:
+      - /var/lib/redisdata_c:/data
+    ports:
+      - "6381:6379"
     restart: always
     tty: true
     stdin_open: true
@@ -25,8 +50,10 @@ services:
       - ./logs:/root/sugar/logs
     depends_on:
       - db
+      - cache
+      - mq
     ports:
-      - "8010:8000"
+      - "8000:8000"
     restart: always
     tty: true
     stdin_open: true

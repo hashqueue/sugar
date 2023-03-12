@@ -211,9 +211,9 @@ def deploy_agent_to_device(host: str, username: str, password: str, port: int, t
         stdout, stderr = exec_cmd(ssh_client=ssh, cmd=f'nohup bash -c "cd {home_file_path}/sugar-agent/ && chmod u+x '
                                                       f'{sugar_agent_file_name} && ./{sugar_agent_file_name} '
                                                       f'-user {env("RABBITMQ_USER")} -password '
-                                                      f'{env("RABBITMQ_PASSWORD")} -host {env("RABBITMQ_HOST")} -port '
-                                                      f'{env("RABBITMQ_PORT")} -exchange-name task_exchange '
-                                                      f'-device-id {device_id}" > {home_file_path}/'
+                                                      f'{env("RABBITMQ_PASSWORD")} -host {env("RABBITMQ_SERVER_HOST")} '
+                                                      f'-port {env("RABBITMQ_SERVER_PORT")} -exchange-name '
+                                                      f'task_exchange -device-id {device_id}" > {home_file_path}/'
                                                       f'sugar-agent/agent.log 2>&1 &')
         if stderr == '':
             time.sleep(5)
