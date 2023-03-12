@@ -26,6 +26,7 @@ services:
       - /var/lib/rabbitmq_3.11_c:/var/lib/rabbitmq
     ports:
       - "5674:5672"
+      - "15672:15672"
     restart: always
     tty: true
     stdin_open: true
