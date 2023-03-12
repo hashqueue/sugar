@@ -24,6 +24,6 @@ ENV_PATH=.env.prod python3 manage.py collectstatic --noinput \
     && ENV_PATH=.env.prod python3 manage.py makemigrations \
     && ENV_PATH=.env.prod python3 manage.py migrate \
     && echo "MySQL data migration is completed." \
-    && ENV_PATH=./.env.prod supervisord -c celery_app.conf \
+    && ENV_PATH=.env.prod supervisord -c celery_app.conf \
     && echo "celery service has been deployed." \
     && ENV_PATH=.env.prod daphne -b 0.0.0.0 -p 8000 --access-log logs/access-daphne.log sugar.asgi:application

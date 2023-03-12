@@ -33,7 +33,7 @@ SECRET_KEY = env('BASE_SECRET_KEY')
 DEFAULT_USER_PASSWORD = env('BASE_DEFAULT_USER_PASSWORD')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('BASE_DEBUG')
+DEBUG = eval(env('BASE_DEBUG'))
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
