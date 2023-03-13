@@ -24,6 +24,7 @@ services:
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
     volumes:
       - /var/lib/rabbitmq_3.11_c:/var/lib/rabbitmq
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
     ports:
       - "5674:5672"
       - "15672:15672"
