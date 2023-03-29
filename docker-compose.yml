@@ -50,6 +50,7 @@ services:
     volumes:
       - ./static:/root/sugar/static
       - ./logs:/root/sugar/logs
+      - ./.env.prod:/root/sugar/.env.prod
     depends_on:
       - db
       - cache
